@@ -9416,19 +9416,20 @@ function culqi() {
                 // 1. Generar PDF (Si esto funciona, el pago fue 100% exitoso)
                 generarBoletaPDF(totalSoles);
 
-                // 2. Armar mensaje de WhatsApp
-                // Intentamos leer de los IDs o de las variables globales que usas en el resto del HTML
-                let nombre = safeGetVal('customerName'); 
-                let direccion = safeGetVal('customerAddress');
-                let detalle = typeof generarDetallePedido === 'function' ? generarDetallePedido() : "Detalle no disponible";
+// 2. Armar mensaje de WhatsApp
+// Cambiamos 'customerName' por 'customer-name' para que coincida con tu formulario
+let nombre = document.getElementById('customer-name')?.value || "Cliente Makaha"; 
+let direccion = document.getElementById('customer-address')?.value || "Recojo en Tienda";
 
-                let mensaje = `*Pedido Makaha Surf Shop*\n\n` +
-                              `*Cliente:* ${nombre}\n` +
-                              `*Dirección:* ${direccion}\n` +
-                              `*Detalle:* \n${detalle}\n` +
-                              `*Total:* S/ ${totalSoles.toFixed(2)}\n` +
-                              `*Pago:* TARJETA (CULQI)\n` +
-                              `*ID Transacción:* ${data.id}`;
+let detalle = typeof generarDetallePedido === 'function' ? generarDetallePedido() : "Detalle no disponible";
+
+let mensaje = `*Pedido Makaha Surf Shop*\n\n` +
+              `*Cliente:* ${nombre}\n` +
+              `*Dirección:* ${direccion}\n` +
+              `*Detalle:* \n${detalle}\n` +
+              `*Total:* S/ ${totalSoles.toFixed(2)}\n` +
+              `*Pago:* TARJETA (CULQI)\n` +
+              `*ID Transacción:* ${data.id}`;
 
                 let link = `https://wa.me/51965890641?text=${encodeURIComponent(mensaje)}`;
 
