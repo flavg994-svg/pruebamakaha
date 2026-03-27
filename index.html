@@ -9337,27 +9337,29 @@ localStorage.removeItem("cart");
 }
 
 
+// Agregamos esta variable afuera para que ambas funciones la compartan
+let montoSeguroCulqi = 0; 
+
 function payWithCulqi(){
+    let total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+    // Guardamos el monto aquí
+    montoSeguroCulqi = Math.round(total * exchangeRateUSDToPEN * 100);
 
-let total = cart.reduce((sum,item)=> sum + item.price * item.qty,0);
-let amount = Math.round(total * exchangeRateUSDToPEN * 100);
+    Culqi.publicKey = "pk_test_sk0fA4NJOk6okdjw";
 
-Culqi.publicKey = "pk_test_sk0fA4NJOk6okdjw";
+    Culqi.settings({
+        title: "Makaha Surf Shop",
+        description: "Compra en Makaha Surf Shop",
+        currency: "PEN",
+        amount: montoSeguroCulqi // Usamos la variable
+    });
 
-Culqi.settings({
-title: "Makaha Surf Shop",
-description: "Compra en Makaha Surf Shop",
-currency: "PEN",
-amount: amount
-});
+    Culqi.options({
+        lang: "es",
+        installments: false
+    });
 
-Culqi.options({
-lang: "es",
-installments: false
-});
-
-Culqi.open();
-
+    Culqi.open();
 }
 
 function culqi() {
@@ -9365,14 +9367,11 @@ function culqi() {
         let token = Culqi.token.id;
         let email = Culqi.token.email;
         
-        // 1. Calculamos el monto en Soles (formato normal, ej: 150.50)
-        // No multiplicamos por 100 aquí porque la Firebase Function ya lo hace.
+        // Mantenemos tu lógica de totalOriginal para tu PDF y WhatsApp
         let totalOriginal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
-        let totalSoles = totalOriginal * (typeof exchangeRateUSDToPEN !== 'undefined' ? exchangeRateUSDToPEN : 1);
 
-        console.log("Iniciando validación de pago por S/", totalSoles.toFixed(2));
+        console.log("Validando pago...");
 
-        // 2. Llamada a tu Firebase Function
         fetch("https://culqicharge-mlpktja24q-uc.a.run.app/", {
             method: "POST",
             mode: "cors",
@@ -9381,35 +9380,31 @@ function culqi() {
             },
             body: JSON.stringify({
                 token: token,
-                amount: totalSoles.toFixed(2), // Enviamos el monto como número decimal
+                amount: montoSeguroCulqi, // USAMOS EL MONTO SEGURO (evita el error 400)
                 email: email
             })
         })
-        .then(async res => {
-            const data = await res.json();
-            
-            if (res.ok && data.object === "charge" && data.status === "captured") {
-                // --- ESCENARIO: PAGO EXITOSO ---
+        .then(res => res.json())
+        .then(data => {
+            if (data.object === "charge" && data.status === "captured") {
                 
                 alert("✅ Pago aprobado. A continuación se descargará su boleta. Al cerrar este mensaje, será enviado a WhatsApp para coordinar la entrega.");
 
-                // Generar PDF
-                if (typeof generarBoletaPDF === 'function') {
-                    generarBoletaPDF(totalSoles);
-                }
+                let totalSoles = totalOriginal * exchangeRateUSDToPEN;
+                
+                generarBoletaPDF(totalSoles);
 
-                // Generar mensaje de WhatsApp
-                let detalle = (typeof generarDetallePedido === 'function') ? generarDetallePedido() : "Detalle no disponible";
+                let detalle = generarDetallePedido();
                 
                 let mensaje = `
 Pedido Makaha Surf Shop
 
-Nombre: ${document.getElementById('customerName')?.value || 'No provisto'}
-Telefono: ${document.getElementById('customerPhone')?.value || 'No provisto'}
-Email: ${document.getElementById('customerEmail')?.value || email}
-DNI / RUC: ${document.getElementById('customerDocument')?.value || 'No provisto'}
-Dirección: ${document.getElementById('customerAddress')?.value || 'No provisto'}
-Notas: ${document.getElementById('customerNotes')?.value || "Ninguna"}
+Nombre: ${customerName.value}
+Telefono: ${customerPhone.value}
+Email: ${customerEmail.value}
+DNI / RUC: ${customerDocument.value}
+Dirección: ${customerAddress.value}
+Notas: ${customerNotes.value || "Ninguna"}
 
 Detalle:
 ${detalle}
@@ -9417,43 +9412,33 @@ ${detalle}
 Total: S/ ${totalSoles.toFixed(2)}
 
 PAGO REALIZADO CON TARJETA (CULQI)
-ID de Transacción: ${data.id}
+ID: ${data.id || "Culqi"}
 `;
 
                 let link = `https://wa.me/51965890641?text=${encodeURIComponent(mensaje)}`;
 
-                // Redirección o mostrar mensaje de WhatsApp
-                if (typeof showWhatsappMessage === 'function') {
-                    showWhatsappMessage(link);
-                } else {
-                    window.location.href = link;
-                }
+                showWhatsappMessage(link);
 
-                // Limpiar Carrito
                 cart = [];
-                if (typeof updateCart === 'function') updateCart();
-                if (typeof saveCart === 'function') saveCart();
-                if (typeof closeCart === 'function') closeCart();
+                updateCart();
+                saveCart();
+                if(typeof closeCart === 'function') closeCart();
 
             } else {
-                // --- ESCENARIO: PAGO RECHAZADO O ERROR DE CULQI ---
-                console.error("Error de Culqi:", data);
-                alert("❌ Pago rechazado: " + (data.user_message || data.merchant_message || "Intente con otra tarjeta"));
+                alert("❌ Pago rechazado: " + (data.user_message || "Intente con otra tarjeta"));
             }
         })
         .catch(error => {
-            // --- ESCENARIO: ERROR DE SERVIDOR O RED ---
-            console.error("Error crítico en el fetch:", error);
-            alert("Hubo un error de conexión con el servidor de pagos. Por favor, revisa tu conexión o intenta más tarde.");
+            console.error("Error:", error);
+            alert("Hubo un error al procesar el pago.");
         });
 
     } else {
-        // Error al generar el token (ej: datos de tarjeta inválidos)
-        console.log("Error Culqi Token:", Culqi.error);
-        alert(Culqi.error.user_message || "Error al validar la tarjeta");
+        console.log(Culqi.error);
+        alert(Culqi.error.user_message);
     }
 }
-
+ 
 function showYapePayment(){
 
 comprobanteSubido = false;
