@@ -9396,47 +9396,58 @@ function culqi() {
         })
         .then(res => res.json())
         .then(data => {
+            // Verificamos éxito del pago
             if (data.object === "charge" && (data.status === "captured" || data.outcome?.type === "venta_exitosa")) {
                 
                 alert("✅ ¡Pago Exitoso! Generando boleta...");
 
-                // --- CORRECCIÓN DE SEGURIDAD PARA LOS INPUTS ---
-                const getVal = (id) => {
-                    const el = document.getElementById(id);
-                    return el ? el.value : "No proporcionado";
+                // Función segura para obtener valores sin que el código se rompa
+                const safeGetVal = (idOrElement) => {
+                    if (typeof idOrElement === 'string') {
+                        const el = document.getElementById(idOrElement);
+                        return el ? el.value : "No proporcionado";
+                    }
+                    return idOrElement && idOrElement.value ? idOrElement.value : "No proporcionado";
                 };
 
                 let totalOriginal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
                 let totalSoles = totalOriginal * exchangeRateUSDToPEN;
 
-                // 1. Generar PDF
+                // 1. Generar PDF (Si esto funciona, el pago fue 100% exitoso)
                 generarBoletaPDF(totalSoles);
 
-                // 2. Armar mensaje de WhatsApp (Cuidando que no salgan nulls)
-                let detalle = generarDetallePedido();
+                // 2. Armar mensaje de WhatsApp
+                // Intentamos leer de los IDs o de las variables globales que usas en el resto del HTML
+                let nombre = safeGetVal('customerName'); 
+                let direccion = safeGetVal('customerAddress');
+                let detalle = typeof generarDetallePedido === 'function' ? generarDetallePedido() : "Detalle no disponible";
+
                 let mensaje = `*Pedido Makaha Surf Shop*\n\n` +
-                              `*Cliente:* ${getVal('customerName')}\n` + // Asegúrate que el ID sea 'customerName'
-                              `*Dirección:* ${getVal('customerAddress')}\n` +
+                              `*Cliente:* ${nombre}\n` +
+                              `*Dirección:* ${direccion}\n` +
                               `*Detalle:* \n${detalle}\n` +
                               `*Total:* S/ ${totalSoles.toFixed(2)}\n` +
                               `*Pago:* TARJETA (CULQI)\n` +
-                              `*ID:* ${data.id}`;
+                              `*ID Transacción:* ${data.id}`;
 
                 let link = `https://wa.me/51965890641?text=${encodeURIComponent(mensaje)}`;
 
-                // 3. Limpiar y enviar
+                // 3. Limpieza de carrito
                 cart = [];
-                updateCart();
-                saveCart();
-                if(typeof closeCart === 'function') closeCart();
+                if (typeof updateCart === 'function') updateCart();
+                if (typeof saveCart === 'function') saveCart();
+                if (typeof closeCart === 'function') closeCart();
                 
+                // 4. Redirección final
+                console.log("Redirigiendo a WhatsApp...");
                 window.location.href = link;
 
             } else {
-                throw new Error(data.user_message || "Pago rechazado");
+                throw new Error(data.user_message || "El pago no pudo ser capturado.");
             }
         })
         .catch(error => {
+            console.error("Error en el proceso:", error);
             alert("❌ ERROR: " + error.message);
             if (btnPagar) {
                 btnPagar.innerHTML = "Pagar Ahora";
@@ -9445,7 +9456,7 @@ function culqi() {
         });
 
     } else {
-        alert("Error: " + Culqi.error.user_message);
+        alert("Error de Culqi: " + Culqi.error.user_message);
     }
 }
  
