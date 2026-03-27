@@ -9421,7 +9421,9 @@ function culqi() {
                 let direccion = getCheckoutVal('checkout-address');
                 let notas     = getCheckoutVal('checkout-notes');
 
-                let detalle = typeof generarDetallePedido === 'function' ? generarDetallePedido() : "Detalle no disponible";
+let detalleRaw = typeof generarDetallePedido === 'function' ? generarDetallePedido() : "Sin detalle";
+
+let detalleLimpio = detalleRaw.replace(/%0A/g, '\n');
 
                 let mensaje = `*Pedido Makaha Surf Shop* 🏄‍♂️\n\n` +
                               `*Cliente:* ${nombre}\n` +
