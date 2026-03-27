@@ -9338,12 +9338,13 @@ localStorage.removeItem("cart");
 
 
 // Agregamos esta variable afuera para que ambas funciones la compartan
+// 1. VARIABLE GLOBAL (Ponla fuera de las funciones)
 let montoSeguroCulqi = 0; 
 
 function payWithCulqi(){
     let total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
     
-    // AQUÍ es donde guardamos el valor para que sea idéntico en ambos pasos
+    // Calculamos el monto una sola vez para evitar errores de redondeo
     montoSeguroCulqi = Math.round(total * exchangeRateUSDToPEN * 100);
 
     Culqi.publicKey = "pk_test_sk0fA4NJOk6okdjw";
@@ -9351,9 +9352,14 @@ function payWithCulqi(){
         title: "Makaha Surf Shop",
         description: "Compra en Makaha Surf Shop",
         currency: "PEN",
-        amount: montoSeguroCulqi // Usamos la variable aquí también
+        amount: montoSeguroCulqi 
     });
-    // ... resto de tu código
+
+    Culqi.options({
+        lang: "es",
+        installments: false
+    });
+
     Culqi.open();
 }
 
@@ -9362,7 +9368,7 @@ function culqi() {
         let token = Culqi.token.id;
         let email = Culqi.token.email;
         
-        // Mantenemos tu lógica de totalOriginal para tu PDF y WhatsApp
+        // Mantenemos tu lógica para el PDF y WhatsApp
         let totalOriginal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
 
         console.log("Validando pago...");
@@ -9375,20 +9381,24 @@ function culqi() {
             },
             body: JSON.stringify({
                 token: token,
-                amount: montoSeguroCulqi, // USAMOS EL MONTO SEGURO (evita el error 400)
+                amount: montoSeguroCulqi, // Enviamos el monto exacto guardado arriba
                 email: email
             })
         })
         .then(res => res.json())
         .then(data => {
+            console.log("Respuesta de Culqi:", data);
+
             if (data.object === "charge" && data.status === "captured") {
                 
                 alert("✅ Pago aprobado. A continuación se descargará su boleta. Al cerrar este mensaje, será enviado a WhatsApp para coordinar la entrega.");
 
                 let totalSoles = totalOriginal * exchangeRateUSDToPEN;
                 
+                // Disparamos tu función del PDF
                 generarBoletaPDF(totalSoles);
 
+                // Generamos el detalle para WhatsApp
                 let detalle = generarDetallePedido();
                 
                 let mensaje = `
@@ -9406,20 +9416,23 @@ ${detalle}
 
 Total: S/ ${totalSoles.toFixed(2)}
 
-PAGO REALIZADO CON TARJETA (CULQI)
+PAGO REALIZADO con TARJETA (CULQI)
 ID: ${data.id || "Culqi"}
 `;
 
                 let link = `https://wa.me/51965890641?text=${encodeURIComponent(mensaje)}`;
 
+                // Redirección a WhatsApp
                 showWhatsappMessage(link);
 
+                // Limpiamos carrito
                 cart = [];
                 updateCart();
                 saveCart();
                 if(typeof closeCart === 'function') closeCart();
 
             } else {
+                // Si el pago falla, aquí nos dirá por qué (ej: "Fondos insuficientes")
                 alert("❌ Pago rechazado: " + (data.user_message || "Intente con otra tarjeta"));
             }
         })
