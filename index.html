@@ -9401,35 +9401,39 @@ function culqi() {
                 
                 alert("✅ ¡Pago Exitoso! Generando boleta...");
 
-                // Función segura para obtener valores sin que el código se rompa
-                const safeGetVal = (idOrElement) => {
-                    if (typeof idOrElement === 'string') {
-                        const el = document.getElementById(idOrElement);
-                        return el ? el.value : "No proporcionado";
-                    }
-                    return idOrElement && idOrElement.value ? idOrElement.value : "No proporcionado";
+                // Función interna para obtener valores de los IDs de tu Checkout
+                const getCheckoutVal = (id) => {
+                    const el = document.getElementById(id);
+                    return el && el.value.trim() !== "" ? el.value.trim() : "No proporcionado";
                 };
 
                 let totalOriginal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
                 let totalSoles = totalOriginal * exchangeRateUSDToPEN;
 
-                // 1. Generar PDF (Si esto funciona, el pago fue 100% exitoso)
+                // 1. Generar PDF
                 generarBoletaPDF(totalSoles);
 
-// 2. Armar mensaje de WhatsApp
-// Cambiamos 'customerName' por 'customer-name' para que coincida con tu formulario
-let nombre = document.getElementById('customer-name')?.value || "Cliente Makaha"; 
-let direccion = document.getElementById('customer-address')?.value || "Recojo en Tienda";
+                // 2. Armar mensaje de WhatsApp con los IDs REALES de tu formulario
+                let nombre    = getCheckoutVal('checkout-name');
+                let telefono  = getCheckoutVal('checkout-phone');
+                let dni       = getCheckoutVal('checkout-document');
+                let email     = getCheckoutVal('checkout-email');
+                let direccion = getCheckoutVal('checkout-address');
+                let notas     = getCheckoutVal('checkout-notes');
 
-let detalle = typeof generarDetallePedido === 'function' ? generarDetallePedido() : "Detalle no disponible";
+                let detalle = typeof generarDetallePedido === 'function' ? generarDetallePedido() : "Detalle no disponible";
 
-let mensaje = `*Pedido Makaha Surf Shop*\n\n` +
-              `*Cliente:* ${nombre}\n` +
-              `*Dirección:* ${direccion}\n` +
-              `*Detalle:* \n${detalle}\n` +
-              `*Total:* S/ ${totalSoles.toFixed(2)}\n` +
-              `*Pago:* TARJETA (CULQI)\n` +
-              `*ID Transacción:* ${data.id}`;
+                let mensaje = `*Pedido Makaha Surf Shop* 🏄‍♂️\n\n` +
+                              `*Cliente:* ${nombre}\n` +
+                              `*Teléfono:* ${telefono}\n` +
+                              `*DNI/RUC:* ${dni}\n` +
+                              `*Email:* ${email}\n` +
+                              `*Dirección:* ${direccion}\n` +
+                              `*Notas:* ${notas}\n\n` +
+                              `*Detalle:* \n${detalle}\n\n` +
+                              `*Total Pagado:* S/ ${totalSoles.toFixed(2)}\n` +
+                              `*Método:* TARJETA (CULQI)\n` +
+                              `*ID Transacción:* ${data.id}`;
 
                 let link = `https://wa.me/51965890641?text=${encodeURIComponent(mensaje)}`;
 
