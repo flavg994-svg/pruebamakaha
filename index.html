@@ -9374,39 +9374,37 @@ function payWithCulqi() {
 }
 
 function culqi() {
-    const btnPagar = document.getElementById("btn-pagar-culqi"); // Asegúrate que este sea el ID de tu botón
+    const btnPagar = document.getElementById("btn-pagar-culqi");
 
     if (Culqi.token) {
         let tokenId = Culqi.token.id;
         let emailId = Culqi.token.email;
 
-        // Cambiamos el estado del botón para que el usuario sepa que está procesando
         if (btnPagar) {
             btnPagar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> VALIDANDO PAGO...';
             btnPagar.disabled = true;
         }
 
-        console.log("Iniciando cargo en servidor...");
-
         fetch("https://culqicharge-mlpktja24q-uc.a.run.app/", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 token: tokenId,
-                amount: montoSeguroCulqi, // Enviamos los céntimos exactos
+                amount: montoSeguroCulqi,
                 email: emailId
             })
         })
         .then(res => res.json())
         .then(data => {
-            console.log("Respuesta servidor:", data);
-
-            // Culqi v2 devuelve el objeto 'charge' y el estado 'captured' si tuvo éxito
-            if (data.object === "charge" && (data.status === "captured" || data.outcome.type === "venta_exitosa")) {
+            if (data.object === "charge" && (data.status === "captured" || data.outcome?.type === "venta_exitosa")) {
                 
                 alert("✅ ¡Pago Exitoso! Generando boleta...");
+
+                // --- CORRECCIÓN DE SEGURIDAD PARA LOS INPUTS ---
+                const getVal = (id) => {
+                    const el = document.getElementById(id);
+                    return el ? el.value : "No proporcionado";
+                };
 
                 let totalOriginal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
                 let totalSoles = totalOriginal * exchangeRateUSDToPEN;
@@ -9414,18 +9412,19 @@ function culqi() {
                 // 1. Generar PDF
                 generarBoletaPDF(totalSoles);
 
-                // 2. Preparar mensaje de WhatsApp
+                // 2. Armar mensaje de WhatsApp (Cuidando que no salgan nulls)
                 let detalle = generarDetallePedido();
                 let mensaje = `*Pedido Makaha Surf Shop*\n\n` +
-                              `*Cliente:* ${document.getElementById('customerName').value}\n` +
+                              `*Cliente:* ${getVal('customerName')}\n` + // Asegúrate que el ID sea 'customerName'
+                              `*Dirección:* ${getVal('customerAddress')}\n` +
                               `*Detalle:* \n${detalle}\n` +
-                              `*Total Pagado:* S/ ${totalSoles.toFixed(2)}\n` +
-                              `*Estado:* PAGO CONFIRMADO (CULQI)\n` +
-                              `*ID Transacción:* ${data.id}`;
+                              `*Total:* S/ ${totalSoles.toFixed(2)}\n` +
+                              `*Pago:* TARJETA (CULQI)\n` +
+                              `*ID:* ${data.id}`;
 
                 let link = `https://wa.me/51965890641?text=${encodeURIComponent(mensaje)}`;
 
-                // 3. Limpiar y redirigir
+                // 3. Limpiar y enviar
                 cart = [];
                 updateCart();
                 saveCart();
@@ -9434,15 +9433,11 @@ function culqi() {
                 window.location.href = link;
 
             } else {
-                // Si Culqi rechaza la tarjeta por fondos, error de red, etc.
-                throw new Error(data.user_message || data.description || "Pago rechazado por el banco");
+                throw new Error(data.user_message || "Pago rechazado");
             }
         })
         .catch(error => {
-            console.error("Error en proceso:", error);
             alert("❌ ERROR: " + error.message);
-            
-            // IMPORTANTE: Devolvemos el botón a su estado normal si falla
             if (btnPagar) {
                 btnPagar.innerHTML = "Pagar Ahora";
                 btnPagar.disabled = false;
@@ -9450,9 +9445,7 @@ function culqi() {
         });
 
     } else {
-        // Errores al generar el token (ej: datos de tarjeta inválidos en el popup)
-        console.log(Culqi.error);
-        alert("Error de validación: " + Culqi.error.user_message);
+        alert("Error: " + Culqi.error.user_message);
     }
 }
  
