@@ -9342,23 +9342,18 @@ let montoSeguroCulqi = 0;
 
 function payWithCulqi(){
     let total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
-    // Guardamos el monto aquí
+    
+    // AQUÍ es donde guardamos el valor para que sea idéntico en ambos pasos
     montoSeguroCulqi = Math.round(total * exchangeRateUSDToPEN * 100);
 
     Culqi.publicKey = "pk_test_sk0fA4NJOk6okdjw";
-
     Culqi.settings({
         title: "Makaha Surf Shop",
         description: "Compra en Makaha Surf Shop",
         currency: "PEN",
-        amount: montoSeguroCulqi // Usamos la variable
+        amount: montoSeguroCulqi // Usamos la variable aquí también
     });
-
-    Culqi.options({
-        lang: "es",
-        installments: false
-    });
-
+    // ... resto de tu código
     Culqi.open();
 }
 
