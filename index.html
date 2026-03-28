@@ -15,7 +15,7 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-<script src="https://unpkg.com/tesseract.js@v2.1.0/dist/tesseract.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
@@ -1471,7 +1471,7 @@ window.addEventListener("DOMContentLoaded", function () {
 });
 
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
-let exchangeRateUSDToPEN = 3.45;
+let exchangeRateUSDToPEN = 3.46;
 let selectedPaymentMethod = "";
 let selectedSize = null;
 let selectedColor = null;
@@ -6849,6 +6849,24 @@ stockByVariant:{
 }
 
 },
+{
+    id: 245,
+    name: "Candado antirobos para llaves de auto Spicy",
+    price: 68.01,
+    category: "Accesorios",
+    subcategory: "Proteccion",
+    keywords: ["candado antirobo", "candado", "candado con clave", "candado spicy", "candado con llave"],
+    img: "https://res.cloudinary.com/dkazbai91/image/upload/v1774651895/acaa_ro93ds.jpg",
+    images: [
+        "https://res.cloudinary.com/dkazbai91/image/upload/v1774651895/aca11_srnllf.jpg",
+        "https://res.cloudinary.com/dkazbai91/image/upload/v1774651895/acaa_ro93ds.jpg"
+    ],
+    description: "Un candado para llaves de auto antes de hacer surf es una excelente manera de proteger tus llaves de los ladrones. Al elegir y usar un candado para llaves de auto antes de hacer surf de manera adecuada, puedes ayudar a mantener tus llaves seguras y protegidas.",
+    sizes: ["N/A"],
+    colors: ["Negro"],
+    stock: 2,
+    stockBySize: { "N/A": 2 }
+}
 
 ]
 };
@@ -7492,20 +7510,44 @@ document.getElementById("main-content").innerHTML = `
         </div>
     </div>
   </section>
+<div class="max-w-5xl mx-auto border-t border-gray-200/60 pt-24 pb-12">
+  <div class="grid grid-cols-2 md:grid-cols-3 gap-12 md:gap-8 text-center">
+    
+    <div class="group">
+      <div class="relative inline-block">
+        <h3 class="text-6xl md:text-7xl font-black text-[#001f3f] heading-font tracking-tight transition-transform duration-500 group-hover:scale-105">
+          13<span class="text-2xl font-bold text-gray-400 align-top ml-1">+</span>
+        </h3>
+      </div>
+      <div class="w-10 h-[3px] bg-[#001f3f]/20 mx-auto mt-2 mb-6 transition-all duration-500 group-hover:w-16 group-hover:bg-[#001f3f]"></div>
+      <p class="text-[10px] md:text-xs text-gray-500 uppercase tracking-[0.3em] font-bold leading-relaxed">
+        Años de <br> Trayectoria
+      </p>
+    </div>
 
-      <div class="grid grid-cols-2 md:grid-cols-3 gap-10 text-center border-t border-gray-100 pt-20">
-        <div>
-          <h3 class="text-5xl font-black mb-2 heading-font text-[#001f3f]">+13</h3>
-          <p class="text-gray-500 uppercase tracking-widest text-xs font-bold">Años de experiencia</p>
-        </div>
-        <div>
-          <h3 class="text-5xl font-black mb-2 heading-font text-[#001f3f]">+5k</h3>
-          <p class="text-gray-500 uppercase tracking-widest text-xs font-bold">Clientes satisfechos</p>
-        </div>
-        <div class="col-span-2 md:col-span-1">
-          <h3 class="text-5xl font-black text-[#001f3f] mb-2 heading-font">100%</h3>
-          <p class="text-gray-500 uppercase tracking-widest text-xs font-bold">Pasión por el surf</p>
-        </div>
+    <div class="group">
+      <div class="relative inline-block">
+        <h3 class="text-6xl md:text-7xl font-black text-[#001f3f] heading-font tracking-tight transition-transform duration-500 group-hover:scale-105">
+          5<span class="text-2xl font-bold text-gray-400 align-top ml-1">k</span>
+        </h3>
+      </div>
+      <div class="w-10 h-[3px] bg-[#001f3f]/20 mx-auto mt-2 mb-6 transition-all duration-500 group-hover:w-16 group-hover:bg-[#001f3f]"></div>
+      <p class="text-[10px] md:text-xs text-gray-500 uppercase tracking-[0.3em] font-bold leading-relaxed">
+        Clientes <br> Satisfechos
+      </p>
+    </div>
+
+    <div class="group col-span-2 md:col-span-1 mt-8 md:mt-0">
+      <div class="relative inline-block">
+        <h3 class="text-6xl md:text-7xl font-black text-[#001f3f] heading-font tracking-tight transition-transform duration-500 group-hover:scale-105">
+          100<span class="text-2xl font-bold text-gray-400 align-top ml-1">%</span>
+        </h3>
+      </div>
+      <div class="w-10 h-[3px] bg-[#001f3f]/20 mx-auto mt-2 mb-6 transition-all duration-500 group-hover:w-16 group-hover:bg-[#001f3f]"></div>
+      <p class="text-[10px] md:text-xs text-gray-500 uppercase tracking-[0.3em] font-bold leading-relaxed">
+        Compromiso <br> con el Mar
+      </p>
+    </div>
       </div>
     </div>
   </div>
@@ -8620,11 +8662,11 @@ main.style.marginLeft = "0px";
 
 document.getElementById("main-content").innerHTML = `
 
-<section class="max-w-7xl mx-auto py-26 px-6">
+<section class="max-w-7xl mx-auto pt-[50px] pb-16 px-6">
 
-<div class="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
-
-<div class="grid md:grid-cols-2 gap-12 p-8">
+  <div class="bg-white rounded-[2rem] shadow-[0_20px_50px_-20px_rgba(0,0,0,0.1)] border border-gray-100 overflow-hidden">
+    
+    <div class="grid md:grid-cols-2 gap-12 p-10">
 
 <!-- FORMULARIO -->
 <div>
@@ -8739,6 +8781,7 @@ Puedes pagar con el método que prefieras.
 <span class="bg-white px-2 py-1 rounded border">Visa</span>
 <span class="bg-white px-2 py-1 rounded border">Mastercard</span>
 <span class="bg-white px-2 py-1 rounded border">American Express</span>
+<span class="bg-white px-2 py-1 rounded border">Transferencia</span>
 <span class="bg-white px-2 py-1 rounded border">Yape</span>
 <span class="bg-white px-2 py-1 rounded border">Plin</span>
 
@@ -8752,19 +8795,26 @@ Los pagos con tarjeta son procesados de forma segura por Culqi.
 
 <button id="yape-btn"
   disabled
-  class="w-full mt-6 py-4 rounded-xl bg-gray-400 text-white font-bold uppercase tracking-widest shadow-lg cursor-not-allowed">
-  Yape / Plin
+  class="w-full mt-6 py-4 rounded-xl font-bold uppercase tracking-widest shadow-lg transition-all duration-300
+         bg-gray-400 text-white cursor-not-allowed opacity-70
+         enabled:bg-gradient-to-r enabled:from-purple-600 enabled:to-indigo-600 enabled:cursor-pointer enabled:opacity-100 enabled:hover:scale-[1.02]">
+  <i class="fas fa-mobile-alt mr-2"></i> Yape / Plin
 </button>
 
 <button id="transfer-btn"
-  class="w-full mt-3 py-4 rounded-xl bg-gray-400 text-white font-bold uppercase tracking-widest shadow-lg cursor-not-allowed">
-  Transferencia
+  disabled
+  class="w-full mt-3 py-4 rounded-xl font-bold uppercase tracking-widest shadow-lg transition-all duration-300
+         bg-gray-400 text-white cursor-not-allowed opacity-70
+         enabled:bg-gradient-to-r enabled:from-blue-600 enabled:to-blue-800 enabled:cursor-pointer enabled:opacity-100 enabled:hover:scale-[1.02]">
+  <i class="fas fa-university mr-2"></i> Transferencia
 </button>
 
 <button id="pay-btn"
   disabled
-  class="w-full mt-3 py-4 rounded-xl bg-gray-400 text-white font-bold uppercase tracking-widest shadow-lg cursor-not-allowed">
-  CulqiPay Tarjeta
+  class="w-full mt-3 py-4 rounded-xl font-bold uppercase tracking-widest shadow-lg transition-all duration-300
+         bg-gray-400 text-white cursor-not-allowed opacity-70
+         enabled:bg-gradient-to-r enabled:from-cyan-500 enabled:to-blue-500 enabled:cursor-pointer enabled:opacity-100 enabled:hover:scale-[1.02]">
+  <i class="fas fa-credit-card mr-2"></i> CulqiPay Tarjeta
 </button>
 
 <button
@@ -8817,30 +8867,37 @@ Aceptar para continuar
 </section>
 
 <!-- BENEFICIOS -->
-<section class="bg-white text-[#001f3f] py-16">
+<section class="bg-[#f8fafd] py-20 px-6">
+  <div class="max-w-6xl mx-auto">
 
-<div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-10 text-center">
+    <div class="grid md:grid-cols-3 gap-12 text-center">
+      
+      <div class="group p-8 rounded-2xl bg-white shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_50px_-10px_rgba(0,0,0,0.1)] transition-all duration-500 hover:-translate-y-2">
+        <div class="w-16 h-16 bg-[#001f3f]/5 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-[#001f3f] transition-colors duration-500">
+          <i class="fa-solid fa-truck text-2xl text-[#001f3f] group-hover:text-white transition-colors duration-500"></i>
+        </div>
+        <h3 class="font-bold text-xl mb-3 tracking-tight text-[#001f3f]">Envíos Rápidos</h3>
+        <p class="text-sm leading-relaxed text-gray-500">Logística prioritaria con entrega garantizada en 24-72 horas a todo el Perú.</p>
+      </div>
 
-<div>
-<i class="fa-solid fa-truck text-4xl mb-4"></i>
-<h3 class="font-bold text-lg mb-2">Envíos Rápidos</h3>
-<p class="text-sm text-[#001f3f]">Entrega en 24-72 horas.</p>
-</div>
+      <div class="group p-8 rounded-2xl bg-white shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_50px_-10px_rgba(0,0,0,0.1)] transition-all duration-500 hover:-translate-y-2">
+        <div class="w-16 h-16 bg-[#001f3f]/5 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-[#001f3f] transition-colors duration-500">
+          <i class="fa-solid fa-shield-halved text-2xl text-[#001f3f] group-hover:text-white transition-colors duration-500"></i>
+        </div>
+        <h3 class="font-bold text-xl mb-3 tracking-tight text-[#001f3f]">Compra Segura</h3>
+        <p class="text-sm leading-relaxed text-gray-500">Transacciones cifradas y múltiples métodos de pago verificados para tu tranquilidad.</p>
+      </div>
 
-<div>
-<i class="fa-solid fa-shield-halved text-4xl mb-4"></i>
-<h3 class="font-bold text-lg mb-2">Compra Segura</h3>
-<p class="text-sm text-[#001f3f]">Pagos protegidos y verificados.</p>
-</div>
+      <div class="group p-8 rounded-2xl bg-white shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_50px_-10px_rgba(0,0,0,0.1)] transition-all duration-500 hover:-translate-y-2">
+        <div class="w-16 h-16 bg-[#001f3f]/5 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-[#001f3f] transition-colors duration-500">
+          <i class="fa-solid fa-star text-2xl text-[#001f3f] group-hover:text-white transition-colors duration-500"></i>
+        </div>
+        <h3 class="font-bold text-xl mb-3 tracking-tight text-[#001f3f]">Calidad Garantizada</h3>
+        <p class="text-sm leading-relaxed text-gray-500">Curaduría experta en equipamiento de surf bajo los más altos estándares internacionales.</p>
+      </div>
 
-<div>
-<i class="fa-solid fa-star text-4xl mb-4"></i>
-<h3 class="font-bold text-lg mb-2">Calidad Garantizada</h3>
-<p class="text-sm text-[#001f3f]">Ofrecemos productos de la mejor calidad.</p>
-</div>
-
-</div>
-
+    </div>
+  </div>
 </section>
 `;
 
@@ -9401,7 +9458,6 @@ function culqi() {
                 
                 alert("✅ ¡Pago Exitoso! Generando boleta...");
 
-                // Función interna para obtener valores de los IDs de tu Checkout
                 const getCheckoutVal = (id) => {
                     const el = document.getElementById(id);
                     return el && el.value.trim() !== "" ? el.value.trim() : "No proporcionado";
@@ -9413,7 +9469,7 @@ function culqi() {
                 // 1. Generar PDF
                 generarBoletaPDF(totalSoles);
 
-                // 2. Armar mensaje de WhatsApp con los IDs REALES de tu formulario
+                // 2. Armar mensaje de WhatsApp
                 let nombre    = getCheckoutVal('checkout-name');
                 let telefono  = getCheckoutVal('checkout-phone');
                 let dni       = getCheckoutVal('checkout-document');
@@ -9421,9 +9477,9 @@ function culqi() {
                 let direccion = getCheckoutVal('checkout-address');
                 let notas     = getCheckoutVal('checkout-notes');
 
-let detalleRaw = typeof generarDetallePedido === 'function' ? generarDetallePedido() : "Sin detalle";
-
-let detalleLimpio = detalleRaw.replace(/%0A/g, '\n');
+                // CORRECCIÓN AQUÍ: Obtenemos el detalle y lo asignamos a la variable correcta
+                let detalleRaw = typeof generarDetallePedido === 'function' ? generarDetallePedido() : "Sin detalle";
+                let detalleLimpio = detalleRaw.replace(/%0A/g, '\n');
 
                 let mensaje = `*Pedido Makaha Surf Shop* 🏄‍♂️\n\n` +
                               `*Cliente:* ${nombre}\n` +
@@ -9432,7 +9488,7 @@ let detalleLimpio = detalleRaw.replace(/%0A/g, '\n');
                               `*Email:* ${email}\n` +
                               `*Dirección:* ${direccion}\n` +
                               `*Notas:* ${notas}\n\n` +
-                              `*Detalle:* \n${detalle}\n\n` +
+                              `*Detalle:* \n${detalleLimpio}\n\n` + // <--- USAMOS 'detalleLimpio'
                               `*Total Pagado:* S/ ${totalSoles.toFixed(2)}\n` +
                               `*Método:* TARJETA (CULQI)\n` +
                               `*ID Transacción:* ${data.id}`;
@@ -9463,7 +9519,7 @@ let detalleLimpio = detalleRaw.replace(/%0A/g, '\n');
         });
 
     } else {
-        alert("Error de Culqi: " + Culqi.error.user_message);
+        alert("Error de Culqi: " + (Culqi.error ? Culqi.error.user_message : "Token no generado"));
     }
 }
  
@@ -10833,27 +10889,36 @@ function renderReRideInfo() {
 
 
 <!-- BENEFICIOS -->
-<section class="bg-white text-[#001f3f] py-16">
-  <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-10 text-center">
+<section class="bg-[#f8fafd] py-20 px-6">
+  <div class="max-w-6xl mx-auto">
 
-    <div>
-      <i class="fa-solid fa-truck text-4xl mb-4"></i>
-      <h3 class="font-bold text-lg mb-2">Envíos Rápidos</h3>
-      <p class="text-sm text-[#001f3f]">Entrega en 24-72 horas.</p>
+    <div class="grid md:grid-cols-3 gap-12 text-center">
+      
+      <div class="group p-8 rounded-2xl bg-white shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_50px_-10px_rgba(0,0,0,0.1)] transition-all duration-500 hover:-translate-y-2">
+        <div class="w-16 h-16 bg-[#001f3f]/5 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-[#001f3f] transition-colors duration-500">
+          <i class="fa-solid fa-truck text-2xl text-[#001f3f] group-hover:text-white transition-colors duration-500"></i>
+        </div>
+        <h3 class="font-bold text-xl mb-3 tracking-tight text-[#001f3f]">Envíos Rápidos</h3>
+        <p class="text-sm leading-relaxed text-gray-500">Logística prioritaria con entrega garantizada en 24-72 horas a todo el Perú.</p>
+      </div>
+
+      <div class="group p-8 rounded-2xl bg-white shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_50px_-10px_rgba(0,0,0,0.1)] transition-all duration-500 hover:-translate-y-2">
+        <div class="w-16 h-16 bg-[#001f3f]/5 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-[#001f3f] transition-colors duration-500">
+          <i class="fa-solid fa-shield-halved text-2xl text-[#001f3f] group-hover:text-white transition-colors duration-500"></i>
+        </div>
+        <h3 class="font-bold text-xl mb-3 tracking-tight text-[#001f3f]">Compra Segura</h3>
+        <p class="text-sm leading-relaxed text-gray-500">Transacciones cifradas y múltiples métodos de pago verificados para tu tranquilidad.</p>
+      </div>
+
+      <div class="group p-8 rounded-2xl bg-white shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_50px_-10px_rgba(0,0,0,0.1)] transition-all duration-500 hover:-translate-y-2">
+        <div class="w-16 h-16 bg-[#001f3f]/5 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-[#001f3f] transition-colors duration-500">
+          <i class="fa-solid fa-star text-2xl text-[#001f3f] group-hover:text-white transition-colors duration-500"></i>
+        </div>
+        <h3 class="font-bold text-xl mb-3 tracking-tight text-[#001f3f]">Calidad Garantizada</h3>
+        <p class="text-sm leading-relaxed text-gray-500">Curaduría experta en equipamiento de surf bajo los más altos estándares internacionales.</p>
+      </div>
+
     </div>
-
-    <div>
-      <i class="fa-solid fa-shield-halved text-4xl mb-4"></i>
-      <h3 class="font-bold text-lg mb-2">Compra Segura</h3>
-      <p class="text-sm text-[#001f3f]">Pagos protegidos y verificados.</p>
-    </div>
-
-    <div>
-      <i class="fa-solid fa-star text-4xl mb-4"></i>
-      <h3 class="font-bold text-lg mb-2">Calidad Garantizada</h3>
-      <p class="text-sm text-[#001f3f]">Ofrecemos productos de la mejor calidad.</p>
-    </div>
-
   </div>
 </section>
 `;
@@ -11636,9 +11701,9 @@ function updateTransform() {
 
 // --- FUNCIÓN PARA SUBIR Y VALIDAR COMPROBANTE ---
 
+// 1. FUNCIÓN PRINCIPAL: Gestiona la lógica de validación y subida
 async function subirComprobante(input) {
     if (input.files && input.files.length > 0) {
-
         const file = input.files[0];
 
         let btn = document.getElementById("confirm-payment-btn") || 
@@ -11646,8 +11711,8 @@ async function subirComprobante(input) {
                   input.parentElement.querySelector('button');
 
         const tasaActual = 3.45;
-
         let totalUSD = 0;
+        
         if (typeof cart !== 'undefined' && cart.length > 0) {
             totalUSD = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
         } else {
@@ -11665,62 +11730,37 @@ async function subirComprobante(input) {
         }
 
         try {
-
             const isMobile = /Android|iPhone|iPad/i.test(navigator.userAgent);
 
             // ===============================
-            // 📱 CASO CELULAR → SIN OCR
+            // 📱 CASO CELULAR (SUBIDA DIRECTA)
             // ===============================
             if (isMobile) {
-
                 console.log("Modo móvil: saltando OCR");
-
-                if (btn) btn.innerHTML = `<i class="fas fa-cloud-upload-alt mr-2"></i> SUBIENDO...`;
-
-                const formData = new FormData();
-                formData.append("file", file);
-                formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
-
-                const response = await fetch(
-                    `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
-                    { method: "POST", body: formData }
-                );
-
-                const data = await response.json();
-
-                comprobanteLink = data.secure_url;
-                comprobanteSubido = true;
-
-                if (btn) {
-                    btn.disabled = false;
-                    btn.innerHTML = `<i class="fab fa-whatsapp mr-2"></i> CONFIRMAR PEDIDO`;
-                    btn.style.backgroundColor = "#25D366";
-                    btn.style.opacity = "1";
-                    btn.style.cursor = "pointer";
-                    btn.style.pointerEvents = "auto";
-                }
-
-                alert("✅ Comprobante subido correctamente. Dale a CONFIRMAR.");
-
-                return; // 🔥 IMPORTANTE: corta aquí
-
+                await realizarSubidaCloudinary(file, btn);
+                alert("✅ Comprobante subido. Dale a CONFIRMAR.");
+                return;
             }
 
             // ===============================
-            // 💻 PC → CON OCR (tu lógica)
+            // 💻 PC -> CON PRE-PROCESADO Y OCR (V5)
             // ===============================
-
-            const result = await Tesseract.recognize(file, 'spa');
-            const textoDetectado = result.data.text;
-            const txtLimpio = textoDetectado.toLowerCase();
-            const numeros = textoDetectado.match(/\d+/g) || [];
+            
+            // Paso A: Convertir imagen a formato compatible (PNG) para evitar errores WebP
+            const imageReady = await preprocessImage(file);
+            
+            // Paso B: Ejecutar OCR con Tesseract V5
+            const { data: { text } } = await Tesseract.recognize(imageReady, 'spa');
+            
+            const txtLimpio = text.toLowerCase();
+            const numeros = text.match(/\d+/g) || [];
 
             const esPagoApp = txtLimpio.includes('yape') || txtLimpio.includes('plin') || 
                               txtLimpio.includes('operacion') || txtLimpio.includes('pago') || 
-                              txtLimpio.includes('exitoso') || txtLimpio.includes('pagaste');
+                              txtLimpio.includes('exitoso') || txtLimpio.includes('pagaste') ||
+                              txtLimpio.includes('bcp') || txtLimpio.includes('interbank');
 
             let montoValidado = false;
-
             for (let n of numeros) {
                 let val = parseInt(n);
                 if (val >= rangoMin && val <= rangoMax) { montoValidado = true; break; }
@@ -11733,57 +11773,68 @@ async function subirComprobante(input) {
             }
 
             if (esPagoApp) {
-
-                if (!montoValidado) {
-                    console.log("Aviso: monto no detectado correctamente.");
-                }
-
-                if (btn) btn.innerHTML = `<i class="fas fa-cloud-upload-alt mr-2"></i> SUBIENDO...`;
-
-                const formData = new FormData();
-                formData.append("file", file);
-                formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
-
-                const response = await fetch(
-                    `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
-                    { method: "POST", body: formData }
-                );
-
-                const data = await response.json();
-
-                comprobanteLink = data.secure_url;
-                comprobanteSubido = true;
-
-                if (btn) {
-                    btn.disabled = false;
-                    btn.innerHTML = `<i class="fab fa-whatsapp mr-2"></i> CONFIRMAR PEDIDO`;
-                    btn.style.backgroundColor = "#25D366";
-                    btn.style.opacity = "1";
-                    btn.style.cursor = "pointer";
-                    btn.style.pointerEvents = "auto";
-                }
-
-                alert("✅ Comprobante recibido. Dale a CONFIRMAR.");
-
+                await realizarSubidaCloudinary(file, btn);
+                alert("✅ Comprobante validado y recibido. Dale a CONFIRMAR.");
             } else {
-
-                alert(`❌ ERROR: No parece un comprobante de pago.`);
-
+                alert(`❌ ERROR: No parece un comprobante válido.`);
                 if (btn) {
                     btn.disabled = false;
                     btn.innerHTML = "REINTENTAR SUBIDA";
-                    btn.style.opacity = "1";
                 }
             }
 
         } catch (error) {
-            console.error(error);
-
-            if (btn) {
-                btn.disabled = false;
-                btn.innerHTML = "SUBIR COMPROBANTE";
-            }
+            console.error("Error en proceso:", error);
+            // Fallback: Si el OCR falla, permitimos la subida para no bloquear al cliente
+            await realizarSubidaCloudinary(file, btn);
         }
+    }
+}
+
+// 2. FUNCIÓN DE APOYO: Convierte la imagen a Canvas/PNG para evitar errores de formato
+async function preprocessImage(file) {
+    return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+                resolve(canvas.toDataURL('image/png')); 
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+// 3. FUNCIÓN DE APOYO: Se encarga exclusivamente de la subida a Cloudinary
+async function realizarSubidaCloudinary(file, btn) {
+    if (btn) btn.innerHTML = `<i class="fas fa-cloud-upload-alt mr-2"></i> SUBIENDO...`;
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+
+    const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
+        { method: "POST", body: formData }
+    );
+
+    const data = await response.json();
+    comprobanteLink = data.secure_url;
+    comprobanteSubido = true;
+
+    if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fab fa-whatsapp mr-2"></i> CONFIRMAR PEDIDO`;
+        btn.style.backgroundColor = "#25D366";
+        btn.style.opacity = "1";
+        btn.style.cursor = "pointer";
+        btn.style.pointerEvents = "auto";
     }
 }
 
