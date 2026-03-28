@@ -12351,95 +12351,99 @@ function generarBoletaPDF(total) {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
 
-    // --- CONFIGURACIÓN DE DATOS ---
     const getVal = (id) => {
         const el = document.getElementById(id);
         return el && el.value.trim() !== "" ? el.value.trim() : "No proporcionado";
     };
 
-    const cliente = {
-        nombre: getVal('checkout-name'),
-        dni: getVal('checkout-document'),
-        telefono: getVal('checkout-phone'),
-        direccion: getVal('checkout-address'),
-        email: getVal('checkout-email')
-    };
-
+    // --- 1. RECUADRO DE RUC (Superior Derecho) ---
+    doc.setDrawColor(0);
+    doc.setLineWidth(0.5);
+    doc.rect(130, 10, 70, 25); // Cuadro del RUC
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(14);
+    doc.text("R.U.C. 20550185459", 135, 17);
+    doc.setFillColor(240, 240, 240);
+    doc.rect(130, 20, 70, 7, 'F'); // Fondo gris para el tipo de documento
+    doc.text("BOLETA DE VENTA", 135, 25);
+    doc.text("ELECTRÓNICA", 143, 33);
     const numBoleta = "BE01-" + Math.floor(100000 + Math.random() * 900000);
 
-    // --- ENCABEZADO: TU EMPRESA ---
-    doc.setFillColor(15, 76, 92); // Color azul Makaha
-    doc.rect(0, 0, 210, 40, 'F');
-    
-    doc.setTextColor(255, 255, 255);
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(22);
+    // --- 2. DATOS DE LA EMPRESA (Izquierda) ---
+    doc.setFontSize(20);
+    doc.setTextColor(15, 76, 92); // Azul Makaha
     doc.text("MAKAHA SURF SHOP", 15, 20);
     
-    doc.setFontSize(10);
+    doc.setFontSize(9);
+    doc.setTextColor(0);
     doc.setFont("helvetica", "normal");
-    doc.text("CONSORCIO FRANPER E.I.R.L.", 15, 27);
-    doc.text("RUC: 20550185459", 15, 32);
-    doc.text("Barranco, Lima - Perú", 15, 37);
+    doc.text("De: CONSORCIO FRANPER E.I.R.L.", 15, 26);
+    doc.text("Barranco, Lima - Perú", 15, 31);
+    doc.text("Email: contacto@makahasurfshop.com", 15, 36);
 
-    // CUADRO DE BOLETA
-    doc.setDrawColor(255, 255, 255);
-    doc.rect(140, 10, 60, 25);
+    // --- 3. DATOS DEL CLIENTE ---
+    doc.setLineWidth(0.1);
+    doc.line(15, 45, 200, 45); // Línea divisoria
+    
     doc.setFont("helvetica", "bold");
-    doc.text("BOLETA DE VENTA", 145, 18);
-    doc.text("ELECTRÓNICA", 153, 23);
-    doc.text(numBoleta, 150, 30);
-
-    // --- DATOS DEL CLIENTE ---
-    doc.setTextColor(0, 0, 0);
-    doc.setFontSize(11);
-    doc.setFont("helvetica", "bold");
-    doc.text("DATOS DEL CLIENTE:", 15, 50);
-    doc.line(15, 52, 195, 52);
+    doc.text("FECHA DE EMISIÓN:", 15, 52);
+    doc.text("CLIENTE:", 15, 58);
+    doc.text("DNI / RUC:", 15, 64);
+    doc.text("DIRECCIÓN:", 15, 70);
 
     doc.setFont("helvetica", "normal");
-    doc.text(`Señor(a): ${cliente.nombre}`, 15, 60);
-    doc.text(`DNI/RUC: ${cliente.dni}`, 15, 67);
-    doc.text(`Dirección: ${cliente.direccion}`, 15, 74);
-    doc.text(`Fecha: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`, 130, 60);
+    doc.text(new Date().toLocaleDateString(), 55, 52);
+    doc.text(getVal('checkout-name').toUpperCase(), 55, 58);
+    doc.text(getVal('checkout-document'), 55, 64);
+    doc.text(getVal('checkout-address').toUpperCase(), 55, 70);
 
-    // --- TABLA DE PRODUCTOS ---
+    // --- 4. CABECERA DE TABLA ---
+    let y = 80;
+    doc.setFillColor(15, 76, 92);
+    doc.rect(15, y, 185, 8, 'F'); // Fondo azul cabecera
+    doc.setTextColor(255);
     doc.setFont("helvetica", "bold");
-    doc.setFillColor(240, 240, 240);
-    doc.rect(15, 85, 180, 8, 'F');
-    doc.text("DESCRIPCIÓN", 20, 91);
-    doc.text("CANT.", 140, 91);
-    doc.text("TOTAL", 175, 91);
+    doc.text("CANT.", 17, y + 6);
+    doc.text("DESCRIPCIÓN", 40, y + 6);
+    doc.text("P. UNIT", 150, y + 6);
+    doc.text("IMPORTE", 175, y + 6);
 
-    let y = 100;
+    // --- 5. DETALLE DE PRODUCTOS ---
+    y += 15;
+    doc.setTextColor(0);
     doc.setFont("helvetica", "normal");
     
     cart.forEach(item => {
-        const cantidad = item.qty || 1;
-        const subtotal = item.price * exchangeRateUSDToPEN * cantidad;
-        
-        doc.text(item.name.substring(0, 45), 20, y);
-        doc.text(cantidad.toString(), 145, y);
-        doc.text(`S/ ${subtotal.toFixed(2)}`, 175, y);
+        const cant = item.qty || 1;
+        const precioUnit = item.price * exchangeRateUSDToPEN;
+        const importe = precioUnit * cant;
+
+        doc.text(cant.toString(), 20, y);
+        doc.text(item.name.substring(0, 45), 40, y);
+        doc.text(precioUnit.toFixed(2), 155, y, { align: "right" });
+        doc.text(importe.toFixed(2), 190, y, { align: "right" });
         y += 8;
     });
 
-    // --- TOTALES ---
-    doc.line(15, y, 195, y);
+    // --- 6. TOTALES ---
+    y += 5;
+    doc.line(15, y, 200, y);
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(13);
-    doc.text("TOTAL A PAGAR:", 120, y + 15);
-    doc.text(`S/ ${total.toFixed(2)}`, 170, y + 15);
+    doc.setFontSize(12);
+    doc.text("TOTAL A PAGAR:  S/", 140, y + 10);
+    doc.text(total.toFixed(2), 190, y + 10, { align: "right" });
 
-    // --- PIE DE PÁGINA ---
-    doc.setFontSize(9);
+    // --- 7. PIE DE PÁGINA ---
+    doc.setFontSize(8);
     doc.setFont("helvetica", "italic");
-    doc.setTextColor(100, 100, 100);
-    doc.text("Gracias por tu compra en Makaha Surf Shop.", 105, y + 30, { align: "center" });
-    doc.text("Representación impresa de la Boleta de Venta Electrónica.", 105, y + 35, { align: "center" });
+    doc.setTextColor(100);
+    const mensajeFinal = "Esta es una representación impresa de la boleta de venta electrónica.";
+    doc.text(mensajeFinal, 105, y + 25, { align: "center" });
+    doc.text("¡Gracias por confiar en Makaha Surf Shop!", 105, y + 30, { align: "center" });
 
     // --- DESCARGA ---
-    doc.save(`Boleta_Makaha_${cliente.nombre.replace(/\s/g, '_')}.pdf`);
+    const nombreArchivo = `Boleta_${getVal('checkout-name').replace(/\s/g, '_')}.pdf`;
+    doc.save(nombreArchivo);
 }
 	
 </script>
