@@ -12355,36 +12355,29 @@ function generarBoletaPDF(totalSoles) {
         return el && el.value.trim() !== "" ? el.value.trim() : "No proporcionado";
     };
 
-    // --- CÁLCULOS DE LEY (IGV 18%) ---
+    // 1. CÁLCULOS INICIALES
     const total = totalSoles;
     const subtotal = total / 1.18;
     const igv = total - subtotal;
 
-    // --- CÁLCULO DE ALTURA DINÁMICA ---
-    // 1. Cabecera + Datos Cliente hasta la tabla: 80mm aprox.
-    // 2. Productos: cart.length * 7mm cada uno.
-    // 3. Totales + Pie de página: 60mm aprox.
-    const alturaCabeceraYCliente = 80;
-    const alturaProductos = cart.length * 7;
-    const alturaTotalesYPie = 60;
-    const alturaFinalPapel = alturaCabeceraYCliente + alturaProductos + alturaTotalesYPie;
+    // --- EL TRUCO PARA EL CORTE PERFECTO ---
+    // Calculamos dónde terminará todo:
+    // Cabecera (78mm) + Productos (cant * 7mm) + Totales/Pie (60mm)
+    const alturaDinamica = 78 + (cart.length * 7) + 60;
 
-    // Creamos el documento con el ANCHO de A4 (210) pero ALTO dinámico
     const doc = new jsPDF({
         unit: "mm",
-        format: [210, alturaFinalPapel]
+        format: [210, alturaDinamica] // La hoja mide exactamente lo necesario
     });
 
-    // --- 1. AGREGAR LOGO ---
+    // --- 1. LOGO Y RUC ---
     const logoUrl = "https://i.imgur.com/BPUD4wx.png"; 
     doc.addImage(logoUrl, 'PNG', 15, 10, 22, 22);
 
-    // --- 2. RECUADRO DEL RUC (DERECHA) ---
     doc.setLineWidth(0.5);
     doc.rect(130, 10, 65, 25); 
     doc.setFont("helvetica", "bold");
     doc.setFontSize(12);
-    doc.setTextColor(0);
     doc.text("R.U.C. 20550185459", 135, 17);
     doc.line(130, 20, 195, 20); 
     doc.text("BOLETA DE VENTA", 135, 25);
@@ -12392,11 +12385,10 @@ function generarBoletaPDF(totalSoles) {
     const numBoleta = "BE01-" + Math.floor(100000 + Math.random() * 900000);
     doc.text(numBoleta, 145, 33);
 
-    // --- 3. DATOS DE LA EMPRESA ---
+    // --- 2. DATOS EMPRESA ---
     doc.setFontSize(18);
-    doc.setTextColor(15, 76, 92); 
+    doc.setTextColor(15, 76, 92);
     doc.text("MAKAHA SURF SHOP", 42, 18); 
-    
     doc.setFontSize(8);
     doc.setTextColor(0);
     doc.setFont("helvetica", "normal");
@@ -12404,7 +12396,7 @@ function generarBoletaPDF(totalSoles) {
     doc.text("CALLE SAN MARTÍN 550, BARRANCO - LIMA", 42, 27);
     doc.text("WhatsApp: 965 890 641", 42, 31);
 
-    // --- 4. DATOS DEL CLIENTE ---
+    // --- 3. DATOS CLIENTE ---
     doc.setLineWidth(0.1);
     doc.rect(15, 40, 180, 28); 
     doc.setFont("helvetica", "bold");
@@ -12412,15 +12404,14 @@ function generarBoletaPDF(totalSoles) {
     doc.text("CLIENTE        :", 20, 52);
     doc.text("DNI / RUC      :", 20, 58);
     doc.text("DIRECCIÓN      :", 20, 64);
-
     doc.setFont("helvetica", "normal");
     doc.text(new Date().toLocaleString('es-PE'), 55, 46);
     doc.text(getVal('checkout-name').toUpperCase(), 55, 52);
     doc.text(getVal('checkout-document'), 55, 58);
     doc.text(getVal('checkout-address').toUpperCase(), 55, 64);
 
-    // --- 5. TABLA DE PRODUCTOS ---
-    let y = 78;
+    // --- 4. TABLA DE PRODUCTOS ---
+    let y = 78; // Punto de inicio de la tabla
     doc.setFont("helvetica", "bold");
     doc.line(15, y, 195, y); 
     doc.text("CANT.", 17, y + 5);
@@ -12429,7 +12420,7 @@ function generarBoletaPDF(totalSoles) {
     doc.text("IMPORTE", 175, y + 5);
     doc.line(15, y + 8, 195, y + 8); 
 
-    y += 14;
+    y += 14; 
     doc.setFont("helvetica", "normal");
     cart.forEach(item => {
         const cant = item.qty || 1;
@@ -12437,14 +12428,14 @@ function generarBoletaPDF(totalSoles) {
         const importe = pUnit * cant;
 
         doc.text(cant.toString(), 22, y, { align: "center" });
-        doc.text(item.name.substring(0, 40), 40, y);
+        doc.text(item.name.substring(0, 45), 40, y);
         doc.text(pUnit.toFixed(2), 163, y, { align: "right" });
         doc.text(importe.toFixed(2), 190, y, { align: "right" });
-        y += 7;
+        y += 7; // Espaciado entre filas
     });
 
-    // --- 6. SECCIÓN DE TOTALES ---
-    y += 5;
+    // --- 5. TOTALES (Siempre debajo del último producto) ---
+    y += 5; 
     doc.setLineWidth(0.2);
     doc.line(130, y, 195, y); 
     
@@ -12460,8 +12451,8 @@ function generarBoletaPDF(totalSoles) {
     doc.text("TOTAL A PAGAR: S/", 135, y + 20);
     doc.text(total.toFixed(2), 190, y + 20, { align: "right" });
 
-    // --- 7. PIE DE PÁGINA (Calculado según posición de Y) ---
-    y += 30; // Bajamos un poco después del total
+    // --- 6. PIE DE PÁGINA ---
+    y += 35; // Espacio final para el agradecimiento
     doc.setFontSize(8);
     doc.setFont("helvetica", "italic");
     doc.setTextColor(100);
