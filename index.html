@@ -12347,7 +12347,7 @@ const templateParams = {
     });
 }
 
-function generarBoletaPDF(total) {
+function generarBoletaPDF(totalSoles) {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
 
@@ -12356,59 +12356,60 @@ function generarBoletaPDF(total) {
         return el && el.value.trim() !== "" ? el.value.trim() : "No proporcionado";
     };
 
-    // --- RECUADRO DEL RUC (IGUAL AL EJEMPLO) ---
-    doc.setLineWidth(0.7);
-    doc.rect(125, 10, 75, 25); // El cuadro de la derecha
+    // --- LÓGICA DE IMPUESTOS (Perú: IGV 18%) ---
+    const total = totalSoles;
+    const subtotal = total / 1.18;
+    const igv = total - subtotal;
+
+    // --- RECUADRO DEL RUC ---
+    doc.setLineWidth(0.6);
+    doc.rect(125, 10, 75, 25); 
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(14);
+    doc.setFontSize(13);
     doc.text("R.U.C. 20550185459", 132, 17);
     doc.setLineWidth(0.2);
-    doc.line(125, 20, 200, 20); // Línea interna superior
+    doc.line(125, 20, 200, 20); 
     doc.text("BOLETA DE VENTA", 133, 26);
-    doc.line(125, 28, 200, 28); // Línea interna inferior
+    doc.line(125, 28, 200, 28); 
     const numBoleta = "BE01-" + Math.floor(100000 + Math.random() * 900000);
     doc.text(numBoleta, 145, 33);
 
-    // --- DATOS DE MAKAHA (IZQUIERDA) ---
+    // --- DATOS DE MAKAHA ---
     doc.setFontSize(18);
     doc.setTextColor(15, 76, 92);
     doc.text("MAKAHA SURF SHOP", 15, 18);
-    
     doc.setFontSize(8);
     doc.setTextColor(0);
     doc.setFont("helvetica", "normal");
     doc.text("CONSORCIO FRANPER E.I.R.L.", 15, 23);
     doc.text("CALLE SAN MARTÍN 550, BARRANCO - LIMA", 15, 27);
-    doc.text("Teléfono: 965 890 641", 15, 31);
+    doc.text("WhatsApp: 965 890 641", 15, 31);
 
     // --- BLOQUE DE DATOS DEL CLIENTE ---
-    doc.setLineWidth(0.2);
-    doc.rect(15, 42, 185, 35); // Cuadro para datos del cliente
-
+    doc.rect(15, 42, 185, 30); 
     doc.setFont("helvetica", "bold");
     doc.text("FECHA EMISIÓN  :", 20, 48);
-    doc.text("CLIENTE        :", 20, 55);
-    doc.text("DNI / RUC      :", 20, 62);
-    doc.text("DIRECCIÓN      :", 20, 69);
+    doc.text("CLIENTE        :", 20, 54);
+    doc.text("DNI / RUC      :", 20, 60);
+    doc.text("DIRECCIÓN      :", 20, 66);
 
     doc.setFont("helvetica", "normal");
-    doc.text(new Date().toLocaleDateString(), 55, 48);
-    doc.text(getVal('checkout-name').toUpperCase(), 55, 55);
-    doc.text(getVal('checkout-document'), 55, 62);
-    doc.text(getVal('checkout-address').toUpperCase(), 55, 69);
+    doc.text(new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString(), 55, 48);
+    doc.text(getVal('checkout-name').toUpperCase(), 55, 54);
+    doc.text(getVal('checkout-document'), 55, 60);
+    doc.text(getVal('checkout-address').toUpperCase(), 55, 66);
 
     // --- TABLA DE ITEMS ---
-    let y = 85;
-    // Encabezados
+    let y = 80;
     doc.setFont("helvetica", "bold");
-    doc.line(15, y, 200, y); // Línea superior tabla
+    doc.line(15, y, 200, y); 
     doc.text("CANT.", 17, y + 5);
     doc.text("DESCRIPCIÓN", 40, y + 5);
     doc.text("P. UNIT", 155, y + 5);
     doc.text("IMPORTE", 180, y + 5);
-    doc.line(15, y + 8, 200, y + 8); // Línea inferior encabezado
+    doc.line(15, y + 8, 200, y + 8); 
 
-    y += 15;
+    y += 14;
     doc.setFont("helvetica", "normal");
     
     cart.forEach(item => {
@@ -12420,27 +12421,37 @@ function generarBoletaPDF(total) {
         doc.text(item.name.substring(0, 40), 40, y);
         doc.text(pUnit.toFixed(2), 168, y, { align: "right" });
         doc.text(importe.toFixed(2), 195, y, { align: "right" });
-        y += 8;
+        y += 7;
     });
 
-    // --- TOTALES ---
+    // --- BLOQUE DE TOTALES (IGV DESGLOSADO) ---
     y += 5;
-    doc.setLineWidth(0.5);
     doc.line(130, y, 200, y);
+    doc.setFont("helvetica", "normal");
+    
+    // Subtotal (Op. Gravada)
+    doc.text("OP. GRAVADA:  S/", 135, y + 7);
+    doc.text(subtotal.toFixed(2), 195, y + 7, { align: "right" });
+    
+    // IGV (18%)
+    doc.text("I.G.V. (18%):  S/", 135, y + 13);
+    doc.text(igv.toFixed(2), 195, y + 13, { align: "right" });
+    
+    // Total Final
     doc.setFont("helvetica", "bold");
     doc.setFontSize(11);
-    doc.text("TOTAL A PAGAR:  S/", 135, y + 8);
-    doc.text(total.toFixed(2), 195, y + 8, { align: "right" });
+    doc.text("TOTAL A PAGAR: S/", 135, y + 20);
+    doc.text(total.toFixed(2), 195, y + 20, { align: "right" });
 
     // --- PIE DE PÁGINA ---
     doc.setFontSize(8);
     doc.setFont("helvetica", "italic");
     doc.setTextColor(100);
-    doc.text("Representación impresa de la Boleta de Venta Electrónica", 105, y + 25, { align: "center" });
-    doc.text("Consulte su comprobante en: www.makahasurfshop.com", 105, y + 30, { align: "center" });
+    doc.text("Representación impresa de la Boleta de Venta Electrónica", 105, y + 35, { align: "center" });
+    doc.text("¡Gracias por tu compra en Makaha Surf Shop!", 105, y + 40, { align: "center" });
 
-    // Descarga
-    doc.save(`Boleta_Makaha_${getVal('checkout-name').substring(0,5)}.pdf`);
+    // Guardar PDF
+    doc.save(`Boleta_Makaha_${getVal('checkout-document')}.pdf`);
 }
 
 </script>
