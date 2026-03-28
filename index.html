@@ -12349,27 +12349,34 @@ const templateParams = {
 
 function generarBoletaPDF(totalSoles) {
     const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
 
     const getVal = (id) => {
         const el = document.getElementById(id);
         return el && el.value.trim() !== "" ? el.value.trim() : "No proporcionado";
     };
 
-    // --- CÁLCULOS DE LEY (IGV 18%) ---
+    // --- 1. CÁLCULOS DE LEY (IGV 18%) ---
     const total = totalSoles;
     const subtotal = total / 1.18;
     const igv = total - subtotal;
 
-    // --- 1. AGREGAR LOGO ---
-    // Usamos el logo oficial de Makaha (ola)
+    // --- 2. ALTURA DINÁMICA ---
+    // Calculamos el espacio según la cantidad de productos en el carrito
+    const alturaBase = 140; // Espacio para encabezado, datos de cliente y totales
+    const alturaPorProducto = 7; 
+    const alturaTotal = alturaBase + (cart.length * alturaPorProducto);
+
+    // Creamos el documento con la altura calculada (Ancho A4: 210mm)
+    const doc = new jsPDF({
+        unit: "mm",
+        format: [210, alturaTotal]
+    });
+
+    // --- 3. AGREGAR LOGO ---
     const logoUrl = "https://i.imgur.com/BPUD4wx.png"; 
-    
-    // Añadimos la imagen (Posición X: 15, Y: 10, Ancho: 25, Alto: 25)
-    // Nota: El texto se moverá un poco para no chocar con el logo
     doc.addImage(logoUrl, 'PNG', 15, 10, 22, 22);
 
-    // --- 2. RECUADRO DEL RUC (DERECHA) ---
+    // --- 4. RECUADRO DEL RUC (DERECHA) ---
     doc.setLineWidth(0.5);
     doc.rect(130, 10, 65, 25); 
     doc.setFont("helvetica", "bold");
@@ -12382,10 +12389,10 @@ function generarBoletaPDF(totalSoles) {
     const numBoleta = "BE01-" + Math.floor(100000 + Math.random() * 900000);
     doc.text(numBoleta, 145, 33);
 
-    // --- 3. DATOS DE LA EMPRESA (AJUSTADOS POR EL LOGO) ---
+    // --- 5. DATOS DE LA EMPRESA ---
     doc.setFontSize(18);
-    doc.setTextColor(15, 76, 92); // Azul Makaha
-    doc.text("MAKAHA SURF SHOP", 42, 18); // Movido a la derecha del logo
+    doc.setTextColor(15, 76, 92);
+    doc.text("MAKAHA SURF SHOP", 42, 18); 
     
     doc.setFontSize(8);
     doc.setTextColor(0);
@@ -12394,7 +12401,7 @@ function generarBoletaPDF(totalSoles) {
     doc.text("AV. ALMIRANTE GRAU 1420, BARRANCO - LIMA", 42, 27);
     doc.text("WhatsApp: 965 890 641", 42, 31);
 
-    // --- 4. DATOS DEL CLIENTE ---
+    // --- 6. DATOS DEL CLIENTE ---
     doc.setLineWidth(0.1);
     doc.rect(15, 40, 180, 28); 
     doc.setFont("helvetica", "bold");
@@ -12409,7 +12416,7 @@ function generarBoletaPDF(totalSoles) {
     doc.text(getVal('checkout-document'), 55, 58);
     doc.text(getVal('checkout-address').toUpperCase(), 55, 64);
 
-    // --- 5. TABLA DE PRODUCTOS ---
+    // --- 7. TABLA DE PRODUCTOS ---
     let y = 78;
     doc.setFont("helvetica", "bold");
     doc.line(15, y, 195, y); 
@@ -12423,7 +12430,7 @@ function generarBoletaPDF(totalSoles) {
     doc.setFont("helvetica", "normal");
     cart.forEach(item => {
         const cant = item.qty || 1;
-        const pUnit = item.price * exchangeRateUSDToPEN;
+        const pUnit = item.price * (typeof exchangeRateUSDToPEN !== 'undefined' ? exchangeRateUSDToPEN : 1);
         const importe = pUnit * cant;
 
         doc.text(cant.toString(), 22, y, { align: "center" });
@@ -12433,7 +12440,7 @@ function generarBoletaPDF(totalSoles) {
         y += 7;
     });
 
-    // --- 6. SECCIÓN DE TOTALES ---
+    // --- 8. SECCIÓN DE TOTALES ---
     y += 5;
     doc.setLineWidth(0.2);
     doc.line(130, y, 195, y); 
@@ -12450,14 +12457,15 @@ function generarBoletaPDF(totalSoles) {
     doc.text("TOTAL PAGADO: S/", 135, y + 20);
     doc.text(total.toFixed(2), 190, y + 20, { align: "right" });
 
-    // --- 7. PIE DE PÁGINA ---
+    // --- 9. PIE DE PÁGINA (Final del documento) ---
+    y += 30;
     doc.setFontSize(8);
     doc.setFont("helvetica", "italic");
     doc.setTextColor(100);
-    doc.text("Representación impresa de la Boleta de Venta Electrónica", 105, y + 35, { align: "center" });
-    doc.text("¡Gracias por surfear con Makaha!", 105, y + 40, { align: "center" });
+    doc.text("Representación impresa de la Boleta de Venta Electrónica", 105, y, { align: "center" });
+    doc.text("¡Gracias por surfear con Makaha!", 105, y + 5, { align: "center" });
 
-    // Descarga
+    // Descarga con el DNI del cliente
     doc.save(`Boleta_Makaha_${getVal('checkout-document')}.pdf`);
 }
 
