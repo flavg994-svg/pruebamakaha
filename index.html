@@ -12355,28 +12355,28 @@ function generarBoletaPDF(totalSoles) {
         return el && el.value.trim() !== "" ? el.value.trim() : "No proporcionado";
     };
 
-    // --- 1. CÁLCULOS DE LEY (IGV 18%) ---
+    // --- CÁLCULOS DE LEY (IGV 18%) ---
     const total = totalSoles;
     const subtotal = total / 1.18;
     const igv = total - subtotal;
 
-    // --- 2. ALTURA DINÁMICA ---
-    // Calculamos el espacio según la cantidad de productos en el carrito
-    const alturaBase = 140; // Espacio para encabezado, datos de cliente y totales
+    // --- ALTURA DINÁMICA (Corte horizontal perfecto) ---
+    // Calculamos el espacio según la cantidad de productos
+    const alturaBase = 145; 
     const alturaPorProducto = 7; 
     const alturaTotal = alturaBase + (cart.length * alturaPorProducto);
 
-    // Creamos el documento con la altura calculada (Ancho A4: 210mm)
+    // Mantenemos el ANCHO de una A4 (210mm) pero la ALTURA es dinámica
     const doc = new jsPDF({
         unit: "mm",
-        format: [210, alturaTotal]
+        format: [210, alturaTotal] 
     });
 
-    // --- 3. AGREGAR LOGO ---
+    // --- 1. AGREGAR LOGO (Esquina superior izquierda) ---
     const logoUrl = "https://i.imgur.com/BPUD4wx.png"; 
     doc.addImage(logoUrl, 'PNG', 15, 10, 22, 22);
 
-    // --- 4. RECUADRO DEL RUC (DERECHA) ---
+    // --- 2. RECUADRO DEL RUC (Esquina superior derecha) ---
     doc.setLineWidth(0.5);
     doc.rect(130, 10, 65, 25); 
     doc.setFont("helvetica", "bold");
@@ -12389,7 +12389,7 @@ function generarBoletaPDF(totalSoles) {
     const numBoleta = "BE01-" + Math.floor(100000 + Math.random() * 900000);
     doc.text(numBoleta, 145, 33);
 
-    // --- 5. DATOS DE LA EMPRESA ---
+    // --- 3. DATOS DE LA EMPRESA ---
     doc.setFontSize(18);
     doc.setTextColor(15, 76, 92);
     doc.text("MAKAHA SURF SHOP", 42, 18); 
@@ -12401,7 +12401,7 @@ function generarBoletaPDF(totalSoles) {
     doc.text("AV. ALMIRANTE GRAU 1420, BARRANCO - LIMA", 42, 27);
     doc.text("WhatsApp: 965 890 641", 42, 31);
 
-    // --- 6. DATOS DEL CLIENTE ---
+    // --- 4. DATOS DEL CLIENTE (Recuadro ancho) ---
     doc.setLineWidth(0.1);
     doc.rect(15, 40, 180, 28); 
     doc.setFont("helvetica", "bold");
@@ -12416,7 +12416,7 @@ function generarBoletaPDF(totalSoles) {
     doc.text(getVal('checkout-document'), 55, 58);
     doc.text(getVal('checkout-address').toUpperCase(), 55, 64);
 
-    // --- 7. TABLA DE PRODUCTOS ---
+    // --- 5. TABLA DE PRODUCTOS ---
     let y = 78;
     doc.setFont("helvetica", "bold");
     doc.line(15, y, 195, y); 
@@ -12434,13 +12434,13 @@ function generarBoletaPDF(totalSoles) {
         const importe = pUnit * cant;
 
         doc.text(cant.toString(), 22, y, { align: "center" });
-        doc.text(item.name.substring(0, 40), 40, y);
+        doc.text(item.name.substring(0, 50), 40, y);
         doc.text(pUnit.toFixed(2), 163, y, { align: "right" });
         doc.text(importe.toFixed(2), 190, y, { align: "right" });
         y += 7;
     });
 
-    // --- 8. SECCIÓN DE TOTALES ---
+    // --- 6. SECCIÓN DE TOTALES ---
     y += 5;
     doc.setLineWidth(0.2);
     doc.line(130, y, 195, y); 
@@ -12457,7 +12457,7 @@ function generarBoletaPDF(totalSoles) {
     doc.text("TOTAL PAGADO: S/", 135, y + 20);
     doc.text(total.toFixed(2), 190, y + 20, { align: "right" });
 
-    // --- 9. PIE DE PÁGINA (Final del documento) ---
+    // --- 7. PIE DE PÁGINA (Donde termina el corte) ---
     y += 30;
     doc.setFontSize(8);
     doc.setFont("helvetica", "italic");
@@ -12465,7 +12465,7 @@ function generarBoletaPDF(totalSoles) {
     doc.text("Representación impresa de la Boleta de Venta Electrónica", 105, y, { align: "center" });
     doc.text("¡Gracias por surfear con Makaha!", 105, y + 5, { align: "center" });
 
-    // Descarga con el DNI del cliente
+    // Descarga
     doc.save(`Boleta_Makaha_${getVal('checkout-document')}.pdf`);
 }
 
