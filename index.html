@@ -12360,28 +12360,28 @@ function generarBoletaPDF(totalSoles) {
     const subtotal = total / 1.18;
     const igv = total - subtotal;
 
-    // --- ALTURA DINÁMICA (Corte horizontal perfecto) ---
-    // Calculamos el espacio según la cantidad de productos
-    const alturaBase = 145; 
-    const alturaPorProducto = 7; 
-    const alturaTotal = alturaBase + (cart.length * alturaPorProducto);
+    // --- CÁLCULO DINÁMICO DEL ALTO ---
+    // 100mm (cabecera y datos cliente) + (productos * 7mm) + 60mm (totales y pie de página)
+    const alturaBaseEstatica = 105; 
+    const alturaEspacioProductos = cart.length * 7;
+    const alturaTotalesYPie = 55; 
+    const alturaTotal = alturaBaseEstatica + alturaEspacioProductos + alturaTotalesYPie;
 
-    // Mantenemos el ANCHO de una A4 (210mm) pero la ALTURA es dinámica
+    // Crear documento con la altura calculada
     const doc = new jsPDF({
         unit: "mm",
         format: [210, alturaTotal] 
     });
 
-    // --- 1. AGREGAR LOGO (Esquina superior izquierda) ---
+    // --- 1. AGREGAR LOGO ---
     const logoUrl = "https://i.imgur.com/BPUD4wx.png"; 
     doc.addImage(logoUrl, 'PNG', 15, 10, 22, 22);
 
-    // --- 2. RECUADRO DEL RUC (Esquina superior derecha) ---
+    // --- 2. RECUADRO DEL RUC ---
     doc.setLineWidth(0.5);
     doc.rect(130, 10, 65, 25); 
     doc.setFont("helvetica", "bold");
     doc.setFontSize(12);
-    doc.setTextColor(0);
     doc.text("R.U.C. 20550185459", 135, 17);
     doc.line(130, 20, 195, 20); 
     doc.text("BOLETA DE VENTA", 135, 25);
@@ -12401,7 +12401,7 @@ function generarBoletaPDF(totalSoles) {
     doc.text("AV. ALMIRANTE GRAU 1420, BARRANCO - LIMA", 42, 27);
     doc.text("WhatsApp: 965 890 641", 42, 31);
 
-    // --- 4. DATOS DEL CLIENTE (Recuadro ancho) ---
+    // --- 4. DATOS DEL CLIENTE ---
     doc.setLineWidth(0.1);
     doc.rect(15, 40, 180, 28); 
     doc.setFont("helvetica", "bold");
@@ -12457,7 +12457,8 @@ function generarBoletaPDF(totalSoles) {
     doc.text("TOTAL PAGADO: S/", 135, y + 20);
     doc.text(total.toFixed(2), 190, y + 20, { align: "right" });
 
-    // --- 7. PIE DE PÁGINA (Donde termina el corte) ---
+    // --- 7. PIE DE PÁGINA ---
+    // El pie de página se posiciona relativo al final de la tabla/totales
     y += 30;
     doc.setFontSize(8);
     doc.setFont("helvetica", "italic");
