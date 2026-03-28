@@ -12349,54 +12349,44 @@ const templateParams = {
 
 function generarBoletaPDF(totalSoles) {
     const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
 
     const getVal = (id) => {
         const el = document.getElementById(id);
         return el && el.value.trim() !== "" ? el.value.trim() : "No proporcionado";
     };
 
-    // 1. Cálculos de dinero
+    // --- CÁLCULOS DE LEY (IGV 18%) ---
     const total = totalSoles;
     const subtotal = total / 1.18;
     const igv = total - subtotal;
 
-    // 2. CÁLCULO DE ALTURA REAL (Sumamos paso a paso)
-    // Cabecera hasta inicio tabla: 78mm
-    // Productos: cart.length * 7mm
-    // Totales y pie: 55mm
-    const altoNecesario = 78 + (cart.length * 7) + 55;
-
-    // 3. INICIALIZACIÓN FORZADA
-    // Usamos un objeto de configuración completo para que no use el A4 por defecto
-    const doc = new jsPDF({
-        orientation: "p",
-        unit: "mm",
-        format: [210, altoNecesario],
-        putOnlyUsedFonts: true
-    });
-
-    // --- CONTENIDO ---
-    
-    // Logo
+    // --- 1. AGREGAR LOGO ---
+    // Usamos el logo oficial de Makaha (ola)
     const logoUrl = "https://i.imgur.com/BPUD4wx.png"; 
+    
+    // Añadimos la imagen (Posición X: 15, Y: 10, Ancho: 25, Alto: 25)
+    // Nota: El texto se moverá un poco para no chocar con el logo
     doc.addImage(logoUrl, 'PNG', 15, 10, 22, 22);
 
-    // RUC (Ajustado un poco a la izquierda para que no se corte el borde derecho)
+    // --- 2. RECUADRO DEL RUC (DERECHA) ---
     doc.setLineWidth(0.5);
-    doc.rect(125, 10, 65, 25); 
+    doc.rect(130, 10, 65, 25); 
     doc.setFont("helvetica", "bold");
     doc.setFontSize(12);
-    doc.text("R.U.C. 20550185459", 130, 17);
-    doc.line(125, 20, 190, 20); 
-    doc.text("BOLETA DE VENTA", 130, 25);
-    doc.line(125, 28, 190, 28); 
+    doc.setTextColor(0);
+    doc.text("R.U.C. 20550185459", 135, 17);
+    doc.line(130, 20, 195, 20); 
+    doc.text("BOLETA DE VENTA", 135, 25);
+    doc.line(130, 28, 195, 28); 
     const numBoleta = "BE01-" + Math.floor(100000 + Math.random() * 900000);
-    doc.text(numBoleta, 140, 33);
+    doc.text(numBoleta, 145, 33);
 
-    // Empresa
+    // --- 3. DATOS DE LA EMPRESA (AJUSTADOS POR EL LOGO) ---
     doc.setFontSize(18);
-    doc.setTextColor(15, 76, 92);
-    doc.text("MAKAHA SURF SHOP", 42, 18); 
+    doc.setTextColor(15, 76, 92); // Azul Makaha
+    doc.text("MAKAHA SURF SHOP", 42, 18); // Movido a la derecha del logo
+    
     doc.setFontSize(8);
     doc.setTextColor(0);
     doc.setFont("helvetica", "normal");
@@ -12404,67 +12394,70 @@ function generarBoletaPDF(totalSoles) {
     doc.text("CALLE SAN MARTÍN 550, BARRANCO - LIMA", 42, 27);
     doc.text("WhatsApp: 965 890 641", 42, 31);
 
-    // Cliente
+    // --- 4. DATOS DEL CLIENTE ---
     doc.setLineWidth(0.1);
-    doc.rect(15, 40, 175, 28); 
+    doc.rect(15, 40, 180, 28); 
     doc.setFont("helvetica", "bold");
     doc.text("FECHA EMISIÓN  :", 20, 46);
     doc.text("CLIENTE        :", 20, 52);
     doc.text("DNI / RUC      :", 20, 58);
     doc.text("DIRECCIÓN      :", 20, 64);
+
     doc.setFont("helvetica", "normal");
     doc.text(new Date().toLocaleString('es-PE'), 55, 46);
     doc.text(getVal('checkout-name').toUpperCase(), 55, 52);
     doc.text(getVal('checkout-document'), 55, 58);
     doc.text(getVal('checkout-address').toUpperCase(), 55, 64);
 
-    // Tabla Productos
+    // --- 5. TABLA DE PRODUCTOS ---
     let y = 78;
     doc.setFont("helvetica", "bold");
-    doc.line(15, y, 190, y); 
+    doc.line(15, y, 195, y); 
     doc.text("CANT.", 17, y + 5);
     doc.text("DESCRIPCIÓN", 40, y + 5);
-    doc.text("P. UNIT", 145, y + 5);
-    doc.text("IMPORTE", 170, y + 5);
-    doc.line(15, y + 8, 190, y + 8); 
+    doc.text("P. UNIT", 150, y + 5);
+    doc.text("IMPORTE", 175, y + 5);
+    doc.line(15, y + 8, 195, y + 8); 
 
     y += 14;
     doc.setFont("helvetica", "normal");
     cart.forEach(item => {
         const cant = item.qty || 1;
-        const pUnit = item.price * (typeof exchangeRateUSDToPEN !== 'undefined' ? exchangeRateUSDToPEN : 1);
+        const pUnit = item.price * exchangeRateUSDToPEN;
         const importe = pUnit * cant;
 
         doc.text(cant.toString(), 22, y, { align: "center" });
-        doc.text(item.name.substring(0, 45), 40, y);
-        doc.text(pUnit.toFixed(2), 158, y, { align: "right" });
-        doc.text(importe.toFixed(2), 185, y, { align: "right" });
+        doc.text(item.name.substring(0, 40), 40, y);
+        doc.text(pUnit.toFixed(2), 163, y, { align: "right" });
+        doc.text(importe.toFixed(2), 190, y, { align: "right" });
         y += 7;
     });
 
-    // Totales
+    // --- 6. SECCIÓN DE TOTALES ---
     y += 5;
     doc.setLineWidth(0.2);
-    doc.line(125, y, 190, y); 
+    doc.line(130, y, 195, y); 
+    
     doc.setFontSize(9);
-    doc.text("OP. GRAVADA:   S/", 130, y + 6);
-    doc.text(subtotal.toFixed(2), 185, y + 6, { align: "right" });
-    doc.text("I.G.V. (18%):  S/", 130, y + 12);
-    doc.text(igv.toFixed(2), 185, y + 12, { align: "right" });
+    doc.text("OP. GRAVADA:   S/", 135, y + 6);
+    doc.text(subtotal.toFixed(2), 190, y + 6, { align: "right" });
+    
+    doc.text("I.G.V. (18%):  S/", 135, y + 12);
+    doc.text(igv.toFixed(2), 190, y + 12, { align: "right" });
+
     doc.setFont("helvetica", "bold");
     doc.setFontSize(11);
-    doc.text("TOTAL A PAGAR: S/", 130, y + 20);
-    doc.text(total.toFixed(2), 185, y + 20, { align: "right" });
+    doc.text("TOTAL A PAGAR: S/", 135, y + 20);
+    doc.text(total.toFixed(2), 190, y + 20, { align: "right" });
 
-    // Pie de página (justo antes del final)
-    y += 30; 
+    // --- 7. PIE DE PÁGINA ---
     doc.setFontSize(8);
     doc.setFont("helvetica", "italic");
     doc.setTextColor(100);
-    doc.text("Representación impresa de la Boleta de Venta Electrónica", 105, y, { align: "center" });
-    doc.text("¡Gracias por surfear con Makaha!", 105, y + 5, { align: "center" });
+    doc.text("Representación impresa de la Boleta de Venta Electrónica", 105, y + 35, { align: "center" });
+    doc.text("¡Gracias por surfear con Makaha!", 105, y + 40, { align: "center" });
 
-    // Guardar
+    // Descarga
     doc.save(`Boleta_Makaha_${getVal('checkout-document')}.pdf`);
 }
 
