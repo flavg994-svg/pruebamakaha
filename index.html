@@ -12391,7 +12391,7 @@ function generarBoletaPDF(totalSoles) {
     doc.setTextColor(0);
     doc.setFont("helvetica", "normal");
     doc.text("CONSORCIO FRANPER E.I.R.L.", 42, 23);
-    doc.text("CALLE SAN MARTÍN 550, BARRANCO - LIMA", 42, 27);
+    doc.text("AV. ALMIRANTE GRAU 1420, BARRANCO - LIMA", 42, 27);
     doc.text("WhatsApp: 965 890 641", 42, 31);
 
     // --- 4. DATOS DEL CLIENTE ---
@@ -12447,7 +12447,7 @@ function generarBoletaPDF(totalSoles) {
 
     doc.setFont("helvetica", "bold");
     doc.setFontSize(11);
-    doc.text("TOTAL A PAGAR: S/", 135, y + 20);
+    doc.text("TOTAL PAGADO: S/", 135, y + 20);
     doc.text(total.toFixed(2), 190, y + 20, { align: "right" });
 
     // --- 7. PIE DE PÁGINA ---
