@@ -12350,61 +12350,96 @@ const templateParams = {
 function generarBoletaPDF(total) {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
-    
-    // IMPORTANTE: Obtenemos el carrito antes de que culqi() lo limpie
-    const cartData = JSON.parse(localStorage.getItem('cart')) || [];
-    const numBoleta = `B001-${Math.floor(100000 + Math.random() * 900000)}`;
 
-    // Cabecera (Diseño consistente con Libro de Reclamaciones)
-    doc.setFillColor(15, 76, 92);
-    doc.rect(0, 0, 210, 45, 'F');
-    
-    // Logo de Makaha
-    const logoUrl = "https://i.imgur.com/7gGeUQS.png";
-    doc.addImage(logoUrl, 'PNG', 160, 5, 35, 35);
+    // --- CONFIGURACIÓN DE DATOS ---
+    const getVal = (id) => {
+        const el = document.getElementById(id);
+        return el && el.value.trim() !== "" ? el.value.trim() : "No proporcionado";
+    };
+
+    const cliente = {
+        nombre: getVal('checkout-name'),
+        dni: getVal('checkout-document'),
+        telefono: getVal('checkout-phone'),
+        direccion: getVal('checkout-address'),
+        email: getVal('checkout-email')
+    };
+
+    const numBoleta = "BE01-" + Math.floor(100000 + Math.random() * 900000);
+
+    // --- ENCABEZADO: TU EMPRESA ---
+    doc.setFillColor(15, 76, 92); // Color azul Makaha
+    doc.rect(0, 0, 210, 40, 'F');
     
     doc.setTextColor(255, 255, 255);
-    doc.setFontSize(20); doc.text("BOLETA DE VENTA ELECTRÓNICA", 15, 22);
-    doc.setFontSize(10); 
-    doc.text(`MAKAHA SURF SHOP | Fecha: ${new Date().toLocaleDateString()}`, 15, 32);
-    doc.text(`N° Comprobante: ${numBoleta}`, 15, 39);
-
-    // Cuerpo de la Boleta
-    doc.setTextColor(0, 0, 0);
-    doc.setFont("helvetica", "bold"); doc.text("DETALLE DEL PEDIDO:", 15, 60);
-    doc.line(15, 62, 195, 62);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(22);
+    doc.text("MAKAHA SURF SHOP", 15, 20);
     
-    let y = 72;
-    cartData.forEach(item => {
-        doc.setFont("helvetica", "normal");
-        // CORRECCIÓN AQUÍ: Usamos 'qty' que es lo que tiene tu index.html
-        const cantidad = item.qty || 1; 
-        const subtotal = item.price * cantidad;
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.text("CONSORCIO FRANPER E.I.R.L.", 15, 27);
+    doc.text("RUC: 20550185459", 15, 32);
+    doc.text("Barranco, Lima - Perú", 15, 37);
+
+    // CUADRO DE BOLETA
+    doc.setDrawColor(255, 255, 255);
+    doc.rect(140, 10, 60, 25);
+    doc.setFont("helvetica", "bold");
+    doc.text("BOLETA DE VENTA", 145, 18);
+    doc.text("ELECTRÓNICA", 153, 23);
+    doc.text(numBoleta, 150, 30);
+
+    // --- DATOS DEL CLIENTE ---
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "bold");
+    doc.text("DATOS DEL CLIENTE:", 15, 50);
+    doc.line(15, 52, 195, 52);
+
+    doc.setFont("helvetica", "normal");
+    doc.text(`Señor(a): ${cliente.nombre}`, 15, 60);
+    doc.text(`DNI/RUC: ${cliente.dni}`, 15, 67);
+    doc.text(`Dirección: ${cliente.direccion}`, 15, 74);
+    doc.text(`Fecha: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`, 130, 60);
+
+    // --- TABLA DE PRODUCTOS ---
+    doc.setFont("helvetica", "bold");
+    doc.setFillColor(240, 240, 240);
+    doc.rect(15, 85, 180, 8, 'F');
+    doc.text("DESCRIPCIÓN", 20, 91);
+    doc.text("CANT.", 140, 91);
+    doc.text("TOTAL", 175, 91);
+
+    let y = 100;
+    doc.setFont("helvetica", "normal");
+    
+    cart.forEach(item => {
+        const cantidad = item.qty || 1;
+        const subtotal = item.price * exchangeRateUSDToPEN * cantidad;
         
-        doc.text(`- ${item.name} (x${cantidad})`, 15, y);
-        doc.text(`S/ ${subtotal.toFixed(2)}`, 170, y);
+        doc.text(item.name.substring(0, 45), 20, y);
+        doc.text(cantidad.toString(), 145, y);
+        doc.text(`S/ ${subtotal.toFixed(2)}`, 175, y);
         y += 8;
     });
 
-    // Total Final
-    doc.line(140, y + 2, 195, y + 2);
+    // --- TOTALES ---
+    doc.line(15, y, 195, y);
     doc.setFont("helvetica", "bold");
-    doc.text("TOTAL PAGADO:", 115, y + 10);
-    doc.text(`S/ ${total.toFixed(2)}`, 170, y + 10);
+    doc.setFontSize(13);
+    doc.text("TOTAL A PAGAR:", 120, y + 15);
+    doc.text(`S/ ${total.toFixed(2)}`, 170, y + 15);
 
-    // Pie de página (Validación Digital)
-    doc.setFillColor(245, 245, 245);
-    doc.rect(15, 220, 180, 25, 'F');
-    doc.setFontSize(8);
+    // --- PIE DE PÁGINA ---
+    doc.setFontSize(9);
+    doc.setFont("helvetica", "italic");
     doc.setTextColor(100, 100, 100);
-    doc.text("Este documento es una representación impresa de una transacción electrónica.", 20, 230);
-    doc.text(`ID de Operación: ${Math.random().toString(36).toUpperCase().substring(2, 12)}`, 20, 237);
-    
-    doc.setFontSize(10);
-    doc.setTextColor(180, 180, 180);
-    doc.text("Gracias por surfear con Makaha", 75, 280);
+    doc.text("Gracias por tu compra en Makaha Surf Shop.", 105, y + 30, { align: "center" });
+    doc.text("Representación impresa de la Boleta de Venta Electrónica.", 105, y + 35, { align: "center" });
 
-    doc.save(`Boleta_Makaha_${numBoleta}.pdf`);
+    // --- DESCARGA ---
+    doc.save(`Boleta_Makaha_${cliente.nombre.replace(/\s/g, '_')}.pdf`);
 }
-
+	
 </script>
