@@ -8851,6 +8851,28 @@ const main = document.getElementById("main-content");
 main.style.marginRight = "0px";
 main.style.marginLeft = "0px";
 
+/* Lógica de Banner de Autocompletado */
+const userActivo = auth.currentUser;
+let bannerAutocompletar = "";
+
+if (userActivo) {
+    bannerAutocompletar = `
+        <div id="aviso-autocompletar" class="bg-[#0F4C5C]/10 border border-[#0F4C5C] p-4 rounded-xl mb-6 flex items-center justify-between animate-pulse">
+            <div class="flex items-center">
+                <div class="bg-[#0F4C5C] p-2 rounded-lg mr-3">
+                    <i class="fas fa-user-check text-white text-sm"></i>
+                </div>
+                <p class="text-xs md:text-sm text-[#0F4C5C] font-bold uppercase italic">
+                   ¿Usamos tus datos de usuario para el formulario?
+                </p>
+            </div>
+            <button onclick="autocompletarDatosUsuario()" class="bg-[#0F4C5C] text-white px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-tighter hover:bg-[#1f6f78] transition shadow-md">
+                SÍ, AUTO-RELLENAR
+            </button>
+        </div>
+    `;
+}
+
 document.getElementById("main-content").innerHTML = `
 
 <section class="max-w-7xl mx-auto pt-[50px] pb-16 px-6">
@@ -8862,7 +8884,7 @@ document.getElementById("main-content").innerHTML = `
 <!-- FORMULARIO -->
 <div>
 
-<h1 class="text-3xl font-black mb-8 uppercase italic text-[#001f3f]">
+${bannerAutocompletar} <h1 class="text-3xl font-black mb-8 uppercase italic text-[#001f3f]">
 Checkout
 <span class="text-sm text-gray-500 normal-case font-medium">
 (completa tus datos)
@@ -12657,22 +12679,24 @@ function renderFormularioAuth(modo = 'login') {
 
     if (modo === 'registro') {
         main.innerHTML = `
-            <div class="flex flex-col items-center justify-center min-h-[70vh] px-4 py-10 bg-gray-50">
+            <div class="flex flex-col items-center justify-center min-h-[75vh] px-4 py-10 bg-gray-50">
                 <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-gray-100">
                     <div class="text-center mb-6">
                         <img src="https://i.imgur.com/BPUD4wx.png" alt="Logo" class="w-16 mx-auto mb-2">
                         <h2 class="text-2xl font-bold text-[#0F4C5C]">Únete a la Comunidad</h2>
-                        <p class="text-gray-500 text-sm">Crea tu perfil para gestionar tus pedidos</p>
+                        <p class="text-gray-500 text-sm">Regístrate para una compra más rápida</p>
                     </div>
                     <div class="space-y-3">
                         <input id="reg-name" type="text" placeholder="Nombre Completo" class="w-full px-4 py-3 border rounded-lg outline-none focus:ring-2 focus:ring-[#0F4C5C]">
                         <input id="reg-phone" type="tel" placeholder="Teléfono / WhatsApp" class="w-full px-4 py-3 border rounded-lg outline-none focus:ring-2 focus:ring-[#0F4C5C]">
+                        <input id="reg-dni" type="text" placeholder="DNI / CE" class="w-full px-4 py-3 border rounded-lg outline-none focus:ring-2 focus:ring-[#0F4C5C]">
                         <input id="reg-email" type="email" placeholder="Correo electrónico" class="w-full px-4 py-3 border rounded-lg outline-none focus:ring-2 focus:ring-[#0F4C5C]">
                         <input id="reg-pass" type="password" placeholder="Contraseña (mín. 6 caracteres)" class="w-full px-4 py-3 border rounded-lg outline-none focus:ring-2 focus:ring-[#0F4C5C]">
+                        
                         <button onclick="ejecutarRegistroCompleto()" class="w-full bg-[#0F4C5C] text-white py-3 rounded-lg font-bold shadow-md hover:bg-[#1f6f78] transition">CREAR MI CUENTA</button>
                         <button onclick="renderFormularioAuth('login')" class="w-full text-[#0F4C5C] text-sm font-medium hover:underline">¿Ya tienes cuenta? Inicia sesión</button>
                     </div>
-                    <div id="auth-error" class="mt-4 text-red-500 text-sm text-center hidden"></div>
+                    <div id="auth-error" class="mt-4 text-red-500 text-sm text-center hidden font-medium"></div>
                 </div>
             </div>
         `;
@@ -12687,10 +12711,10 @@ function renderFormularioAuth(modo = 'login') {
                     <div class="space-y-4">
                         <input id="mkh-email" type="email" placeholder="Correo" class="w-full px-4 py-3 border rounded-lg outline-none">
                         <input id="mkh-pass" type="password" placeholder="Contraseña" class="w-full px-4 py-3 border rounded-lg outline-none">
-                        <button onclick="handleLogin()" class="w-full bg-[#0F4C5C] text-white py-3 rounded-lg font-bold">INICIAR SESIÓN</button>
-                        <button onclick="renderFormularioAuth('registro')" class="w-full border border-[#0F4C5C] text-[#0F4C5C] py-3 rounded-lg font-bold">SOY NUEVO / CREAR CUENTA</button>
+                        <button onclick="handleLogin()" class="w-full bg-[#0F4C5C] text-white py-3 rounded-lg font-bold hover:bg-[#1f6f78] transition">INICIAR SESIÓN</button>
+                        <button onclick="renderFormularioAuth('registro')" class="w-full border border-[#0F4C5C] text-[#0F4C5C] py-3 rounded-lg font-bold hover:bg-gray-50 transition">SOY NUEVO / CREAR CUENTA</button>
                     </div>
-                    <div id="auth-error" class="mt-4 text-red-500 text-sm text-center hidden"></div>
+                    <div id="auth-error" class="mt-4 text-red-500 text-sm text-center hidden font-medium"></div>
                 </div>
             </div>
         `;
@@ -12700,18 +12724,78 @@ function renderFormularioAuth(modo = 'login') {
 function renderPerfilUsuario(user) {
     const main = document.getElementById("main-content");
     if (!main) return;
+    
+    let nombre = "Surfer";
+    let telefono = "No registrado";
+    let dni = "No registrado";
+    
+    // Separar la info guardada con el símbolo |
+    if (user.displayName && user.displayName.includes('|')) {
+        const datos = user.displayName.split('|');
+        nombre = datos[0] || "Surfer";
+        telefono = datos[1] || "No registrado";
+        dni = datos[2] || "No registrado"; 
+    } else {
+        nombre = user.displayName || "Surfer";
+    }
+
     main.innerHTML = `
-        <div class="flex flex-col items-center justify-center min-h-[60vh] px-4 py-10 bg-gray-50">
-            <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md text-center border border-gray-100">
-                <div class="w-20 h-20 bg-[#0F4C5C] text-white rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-4 shadow-lg">
-                    ${(user.displayName || user.email).charAt(0).toUpperCase()}
+        <div class="flex flex-col items-center justify-center min-h-[85vh] px-4 py-10 bg-gray-50">
+            <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-lg border border-gray-100">
+                
+                <div class="flex items-center space-x-4 mb-8 border-b pb-6">
+                    <div class="w-20 h-20 bg-[#0F4C5C] text-white rounded-full flex items-center justify-center text-3xl font-bold shadow-lg">
+                        ${nombre.charAt(0).toUpperCase()}
+                    </div>
+                    <div class="text-left">
+                        <h2 class="text-2xl font-bold text-gray-800 italic uppercase">¡ALOHA, ${nombre}!</h2>
+                        <p class="text-gray-500 text-sm">Miembro Oficial Makaha</p>
+                    </div>
                 </div>
-                <h2 class="text-2xl font-bold text-gray-800 italic uppercase">¡ALOHA, ${user.displayName || 'SURFER'}!</h2>
-                <p class="text-gray-500 mb-6">${user.email}</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 text-left">
+                    <div class="p-4 bg-gray-50 rounded-xl border border-gray-100">
+                        <p class="text-xs text-gray-400 uppercase font-bold mb-1">Nombre</p>
+                        <p class="text-gray-700 font-medium">${nombre}</p>
+                    </div>
+                    <div class="p-4 bg-gray-50 rounded-xl border border-gray-100">
+                        <p class="text-xs text-gray-400 uppercase font-bold mb-1">DNI / Documento</p>
+                        <p class="text-gray-700 font-medium">${dni}</p>
+                    </div>
+                    <div class="p-4 bg-gray-50 rounded-xl border border-gray-100">
+                        <p class="text-xs text-gray-400 uppercase font-bold mb-1">Teléfono</p>
+                        <p class="text-gray-700 font-medium">${telefono}</p>
+                    </div>
+                    <div class="p-4 bg-gray-50 rounded-xl border border-gray-100 flex justify-between items-center">
+                        <div>
+                            <p class="text-xs text-gray-400 uppercase font-bold mb-1">Contraseña</p>
+                            <p class="text-gray-700 font-medium tracking-widest">••••••••</p>
+                        </div>
+                        <button onclick="solicitarCambioClave()" class="text-[#0F4C5C] p-1">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="p-4 bg-gray-50 rounded-xl border border-gray-100 text-left mb-8">
+                    <p class="text-xs text-gray-400 uppercase font-bold mb-1">Correo Electrónico</p>
+                    <p class="text-gray-700 font-medium">${user.email}</p>
+                </div>
+
                 <div class="space-y-3">
-                    <button onclick="navigateTo('productos')" class="w-full py-3 bg-[#0F4C5C] text-white font-bold rounded-lg shadow-md">IR AL CATÁLOGO</button>
-                    <button onclick="handleLogout()" class="w-full py-3 bg-red-50 text-red-600 font-bold rounded-lg hover:bg-red-100 transition border border-red-200">CERRAR SESIÓN</button>
+                    <button onclick="navigateTo('productos')" class="w-full py-4 bg-[#0F4C5C] text-white font-bold rounded-xl shadow-md hover:scale-[1.01] transition">
+                        IR AL CATÁLOGO
+                    </button>
+                    <div class="flex gap-2">
+                        <button onclick="handleLogout()" class="flex-1 py-3 bg-white text-gray-600 font-bold rounded-xl border border-gray-200 hover:bg-gray-50 transition">
+                            CERRAR SESIÓN
+                        </button>
+                        <button onclick="confirmarEliminarCuenta()" class="px-4 py-3 bg-red-50 text-red-500 rounded-xl border border-red-100 hover:bg-red-100 transition">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
                 </div>
+                <div id="perfil-feedback" class="mt-4 text-sm text-center hidden font-medium"></div>
             </div>
         </div>
     `;
@@ -12721,22 +12805,24 @@ function renderPerfilUsuario(user) {
 async function ejecutarRegistroCompleto() {
     const nombre = document.getElementById('reg-name').value.trim();
     const tel = document.getElementById('reg-phone').value.trim();
+    const dni = document.getElementById('reg-dni').value.trim();
     const email = document.getElementById('reg-email').value.trim();
     const pass = document.getElementById('reg-pass').value;
     const errorDiv = document.getElementById('auth-error');
 
-    if (!nombre || !tel || !email || pass.length < 6) {
-        errorDiv.innerText = "Completa todos los campos (Pass mín. 6 caracteres)";
+    if (!nombre || !tel || !dni || !email || pass.length < 6) {
+        errorDiv.innerText = "Completa todos los campos correctamente.";
         errorDiv.classList.remove('hidden');
         return;
     }
 
     try {
         const userCredential = await auth.createUserWithEmailAndPassword(email, pass);
-        // Esto guarda el nombre del cliente en Firebase para mostrarlo luego
-        await userCredential.user.updateProfile({ displayName: nombre });
+        // GUARDAMOS LAS 3 COSAS JUNTAS
+        const info = `${nombre}|${tel}|${dni}`;
+        await userCredential.user.updateProfile({ displayName: info });
         
-        alert("¡Cuenta creada, " + nombre + "!");
+        alert("¡Cuenta creada, bienvenido al Team Makaha!");
         navigateTo('inicio');
     } catch (error) {
         errorDiv.innerText = "Error: " + error.message;
@@ -12762,7 +12848,83 @@ function handleLogout() {
     auth.signOut().then(() => navigateTo('inicio'));
 }
 
-// EL CIERRE FINAL (Asegúrate de que esto sea lo último de tu archivo)
+function solicitarCambioClave() {
+    const feedback = document.getElementById('perfil-feedback');
+    const email = auth.currentUser.email;
+
+    if (confirm("¿Deseas recibir un correo para cambiar tu contraseña?")) {
+        auth.sendPasswordResetEmail(email)
+            .then(() => {
+                feedback.innerText = "Te hemos enviado un link de cambio a " + email;
+                feedback.className = "mt-4 text-sm text-center text-green-600 font-medium";
+                feedback.classList.remove('hidden');
+            })
+            .catch((error) => {
+                feedback.innerText = "Error: " + error.message;
+                feedback.className = "mt-4 text-sm text-center text-red-500 font-medium";
+                feedback.classList.remove('hidden');
+            });
+    }
+}
+
+function confirmarEliminarCuenta() {
+    const user = auth.currentUser;
+    const confirmacion = prompt("Esta acción es permanente. Para eliminar tu cuenta de Makaha, escribe 'ELIMINAR':");
+
+    if (confirmacion === "ELIMINAR") {
+        user.delete().then(() => {
+            alert("Cuenta eliminada correctamente. Esperamos verte pronto de nuevo en el agua.");
+            location.reload();
+        }).catch((error) => {
+            alert("Por seguridad, para eliminar tu cuenta debes haber iniciado sesión recientemente. Vuelve a entrar e intenta de nuevo.");
+        });
+    }
+}
+
+function autocompletarDatosUsuario() {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    let nombre = "", telefono = "", dni = "";
+    if (user.displayName && user.displayName.includes('|')) {
+        const datos = user.displayName.split('|');
+        nombre = datos[0]; telefono = datos[1]; dni = datos[2];
+    } else {
+        nombre = user.displayName || "";
+    }
+
+    // 1. Llenamos los campos
+    const inputs = {
+        'checkout-name': nombre,
+        'checkout-phone': telefono,
+        'checkout-document': dni,
+        'checkout-email': user.email
+    };
+
+    for (let id in inputs) {
+        const el = document.getElementById(id);
+        if (el) {
+            el.value = inputs[id];
+            // DISPARAMOS EL EVENTO 'INPUT' MANUALMENTE
+            // Esto hace que tu función setupCheckoutValidation() despierte sola
+            el.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+    }
+
+    // 2. Marcamos los términos y disparamos su evento 'change'
+    const terms = document.getElementById('terms-checkbox');
+    if (terms) {
+        terms.checked = true;
+        terms.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+
+    // 3. Ocultamos el banner
+    const aviso = document.getElementById('aviso-autocompletar');
+    if (aviso) aviso.style.display = 'none';
+
+    console.log("¡Autocompletado Makaha ejecutado y validado!");
+}
+
 </script>
 </body>
 </html>
