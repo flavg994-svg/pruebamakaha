@@ -886,283 +886,154 @@ button[onclick*="buyNow"]:hover {
   <!-- NAVBAR -->
 <nav class="bg-white border border-black sticky top-8 z-50 h-20 flex items-center px-3 sm:px-4 lg:px-6">
 
-<!-- IZQUIERDA (LOGO) -->
-<div onclick="navigateTo('inicio')" 
-class="flex items-center gap-2 sm:gap-3 cursor-pointer flex-shrink-0 max-w-[65%]">
+  <div onclick="navigateTo('inicio')" class="flex items-center gap-2 sm:gap-3 cursor-pointer flex-shrink-0 max-w-[65%]">
+    <img src="https://i.imgur.com/7gGeUQS.png" class="w-10 sm:w-12 md:w-14">
+    <h1 class="heading-font text-black leading-tight text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl whitespace-nowrap tracking-tight">
+      MAKAHA <span class="text-[#0F4C5C]">SURF SHOP</span>
+    </h1>
+  </div>
 
-<img src="https://i.imgur.com/7gGeUQS.png"
-class="w-10 sm:w-12 md:w-14">
+  <div class="hidden min-[1220px]:flex flex-1 justify-center gap-6 xl:gap-8 h-full items-center font-semibold text-sm whitespace-nowrap [&>*]:shrink-0">
 
-<h1 class="heading-font text-black leading-tight
-text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl
-whitespace-nowrap tracking-tight">
+    <div class="relative h-full flex items-center" onmouseenter="openMegaMenu(this)" onmouseleave="closeMegaMenu()">
+      <span class="cursor-pointer hover:text-[#001f3f] flex items-center gap-1 group whitespace-nowrap">
+        CATÁLOGO
+        <svg class="w-4 h-4 transition-transform duration-300 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
+      </span>
 
-  MAKAHA <span class="text-[#0F4C5C]">SURF SHOP</span>
+      <style>
+        .menu-dropdown { display: grid; opacity: 0; visibility: hidden; transform: translateY(10px); transition: all 0.3s ease-out; pointer-events: none; z-index: 100; }
+        .menu-dropdown.is-active { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      </style>
 
-</h1>
+      <div class="menu-dropdown absolute left-[-280px] top-[100%] w-[1250px] bg-white shadow-2xl rounded-xl border border-black grid grid-cols-7 gap-6 pl-8 pr-24 py-8">
+        <div class="min-w-[140px]">
+          <div class="font-bold mb-3">TABLAS</div>
+          <a onclick="menuClick('Tablas','Shortboards')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Shortboards</a>
+          <a onclick="menuClick('Tablas','Fish')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Fish</a>
+          <a onclick="menuClick('Tablas','Funboards')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Funboards</a>
+          <a onclick="menuClick('Tablas','Longboards')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Longboards</a>
+          <a onclick="menuClick('Tablas','Midlength')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Midlength</a>
+          <a onclick="menuClick('Tablas','Gun')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Gun</a>
+          <a onclick="menuClick('Tablas','Evolutiva')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Evolutiva</a>
+        </div>
 
-</div>
-	
-<!-- CENTRO (MENU) -->
-<div class="hidden min-[1220px]:flex flex-1 justify-center gap-6 xl:gap-8 h-full items-center font-semibold text-sm whitespace-nowrap [&>*]:shrink-0">
+        <div class="min-w-[140px]">
+          <div class="font-bold mb-3">NEOPRENOS</div>
+          <a onclick="menuClick('Neoprenos','Hombre')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Hombre</a>
+          <a onclick="menuClick('Neoprenos','Mujer')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Mujer</a>
+          <a onclick="menuClick('Neoprenos','Niños')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Niños</a>
+          <a onclick="menuClick('Neoprenos','Jacket')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Jacket</a>
+          <a onclick="menuClick('Neoprenos','Botas')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Botas</a>
+        </div>
 
-    <div class="relative after:absolute after:left-0 after:top-full after:w-full after:h-5 after:content-['']"
-         onmouseenter="openMegaMenu(this)" 
-         onmouseleave="closeMegaMenu()">
+        <div class="min-w-[140px]">
+          <div class="font-bold mb-3">BODYBOARD</div>
+          <a onclick="menuClick('Bodyboard','Bodyboards')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Bodyboards</a>
+          <a onclick="menuClick('Bodyboard','Aletas')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Aletas</a>
+          <a onclick="menuClick('Bodyboard','Medias')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Medias</a>
+          <a onclick="menuClick('Bodyboard','Sujetadores')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Sujetadores</a>
+        </div>
 
-<span class="cursor-pointer hover:text-[#001f3f] flex items-center gap-1 group whitespace-nowrap">
-  CATÁLOGO
-  
-  <svg 
-    class="w-4 h-4 transition-transform duration-300 group-hover:rotate-180"
-    fill="none" 
-    stroke="currentColor" 
-    viewBox="0 0 24 24">
-    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-  </svg>
-</span>
+        <div class="min-w-[140px]">
+          <div class="font-bold mb-3">PRENDAS TERMICAS</div>
+          <a onclick="menuClick('Prendas Termicas','Licras')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Licras</a>
+          <a onclick="menuClick('Prendas Termicas','Camisetas')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Camisetas</a>
+          <a onclick="menuClick('Prendas Termicas','Cambiadores')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Cambiadores</a>
+          <a onclick="menuClick('Prendas Termicas','Gorras')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Gorras</a>
+        </div>
 
-<style>
-.menu-dropdown {
-    display: grid;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(10px);
-    transition: all 0.3s ease-out;
-    pointer-events: none;
-    z-index: 100;
-}
-.menu-dropdown.is-active {
-    opacity: 1 !important;
-    visibility: visible !important;
-    transform: translateY(0) !important;
-    pointer-events: auto !important;
-}
-</style>
+        <div class="min-w-[140px]">
+          <div class="font-bold mb-3">WETBAGS</div>
+          <a onclick="menuClick('Wetbags/Drybags','Wetbags')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Wetbags</a>
+          <a onclick="menuClick('Wetbags/Drybags','Drybags')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Drybags</a>
+        </div>
 
-<div class="menu-dropdown absolute left-[-280px] top-[250%] 
-  w-[1250px] bg-white shadow-2xl rounded-xl border border-black 
-  grid grid-cols-7 gap-6 pl-8 pr-24 py-8">
+        <div class="min-w-[140px]">
+          <div class="font-bold mb-3">SKATE</div>
+          <a onclick="menuClick('Skateboards','Surfskates')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Surfskates</a>
+          <a onclick="menuClick('Skateboards','Skateboards')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Skateboards</a>
+          <a onclick="menuClick('Skateboards','Longboards')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Longboards</a>
+          <a onclick="menuClick('Skateboards','Oldschool')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Oldschool</a>
+          <a onclick="menuClick('Skateboards','Componentes')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Componentes</a>
+        </div>
 
-<!-- TABLAS -->
-<div class="min-w-[140px]">
-<div class="font-bold mb-3">TABLAS</div>
+        <div class="pr-6">
+          <div class="font-bold mb-3">ACCESORIOS</div>
+          <div class="grid grid-cols-2 gap-x-28 gap-y-3 text-sm">
+            <div>
+              <div class="text-xs font-bold text-gray-400 mt-1 mb-1">Equipamiento</div>
+              <a onclick="menuClick('Accesorios','Leashes')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Leashes</a>
+              <a onclick="menuClick('Accesorios','Quillas')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Quillas</a>
+              <a onclick="menuClick('Accesorios','Decks')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Decks</a>
+              <a onclick="menuClick('Accesorios','Cera')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Cera</a>
+              <a onclick="menuClick('Accesorios','Fundas')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Fundas</a>
+              <div class="text-xs font-bold text-gray-400 mt-3 mb-1">Transporte</div>
+              <a onclick="menuClick('Accesorios','Racks')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Racks</a>
+              <a onclick="menuClick('Accesorios','Bolsos')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Bolsos</a>
+            </div>
+            <div>
+              <div class="text-xs font-bold text-gray-400 mt-1 mb-1">Reparación</div>
+              <a onclick="menuClick('Accesorios','Herramientas')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Herramientas</a>
+              <a onclick="menuClick('Accesorios','Reparacion')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Reparación</a>
+              <div class="text-xs font-bold text-gray-400 mt-3 mb-1">Seguridad</div>
+              <a onclick="menuClick('Accesorios','Cascos')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Cascos</a>
+              <a onclick="menuClick('Accesorios','Proteccion')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Protección</a>
+              <div class="text-xs font-bold text-gray-400 mt-3 mb-1">Otros</div>
+              <a onclick="menuClick('Accesorios','Natacion')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Natación</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-<a onclick="menuClick('Tablas','Shortboards')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Shortboards</a>
-<a onclick="menuClick('Tablas','Fish')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Fish</a>
-<a onclick="menuClick('Tablas','Funboards')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Funboards</a>
-<a onclick="menuClick('Tablas','Longboards')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Longboards</a>
-<a onclick="menuClick('Tablas','Midlength')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Midlength</a>
-<a onclick="menuClick('Tablas','Gun')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Gun</a>
-<a onclick="menuClick('Tablas','Evolutiva')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Evolutiva</a>
+    <div id="usados-menu" class="group relative flex items-center h-full">
+      <span class="cursor-pointer hover:text-[#001f3f] flex items-center gap-1 whitespace-nowrap">
+        USADOS
+        <svg id="arrow-usados" class="w-4 h-4 transition-transform duration-300 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+        </svg>
+      </span>
+      <div class="absolute left-1/2 -translate-x-1/2 top-[100%] w-54 bg-white shadow-lg rounded-lg p-4 mt-2 opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-300 ease-out">
+        <a onclick="navigateTo('vender');" class="block py-1 hover:text-[#001f3f] cursor-pointer">Vender</a>
+        <a onclick="renderReRideInfo();" class="block py-1 border-t border-gray-100 mt-1 pt-1 text-xs font-bold text-green-600 cursor-pointer">✨ ¿Cómo comprar usados?</a>
+      </div>
+    </div>
 
-</div>
+    <span onclick="navigateTo('nosotros')" class="cursor-pointer hover:text-[#001f3f] whitespace-nowrap">NOSOTROS</span>
+    <span onclick="navigateTo('contacto')" class="cursor-pointer hover:text-[#001f3f] whitespace-nowrap">CONTACTO</span>
+    <span onclick="navigateTo('noticias')" class="cursor-pointer hover:text-[#001f3f] whitespace-nowrap">NOTICIAS</span>
 
-<!-- Neoprenos -->
-<div class="min-w-[140px]">
-<div class="font-bold mb-3">NEOPRENOS</div>
+    <button onclick="navigateTo('productos')" class="hidden lg:block bg-[#1f6f78] text-white px-5 py-2 rounded-full font-bold hover:scale-105 transition ml-4 whitespace-nowrap">
+      Explorar catálogo
+    </button>
+  </div>
 
-<a onclick="menuClick('Neoprenos','Hombre')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Hombre</a>
-<a onclick="menuClick('Neoprenos','Mujer')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Mujer</a>
-<a onclick="menuClick('Neoprenos','Niños')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Niños</a>
-<a onclick="menuClick('Neoprenos','Jacket')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Jacket</a>
-<a onclick="menuClick('Neoprenos','Botas')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Botas</a>
+  <div class="flex items-center gap-3 sm:gap-6 ml-auto">
+    
+    <div onclick="navigateTo('cuenta')" class="cursor-pointer hover:text-[#0F4C5C] flex items-center gap-2 flex-shrink-0">
+      <i class="fa-regular fa-user text-xl"></i>
+      <span class="hidden xl:block text-sm font-bold">CUENTA</span>
+    </div>
 
-</div>
+<input type="text" id="search-input" placeholder="Buscar..." 
+       class="hidden md:block w-full max-w-[100px] xl:max-w-[180px] px-3 py-1.5 border border-gray-300 rounded-full text-xs focus:outline-none focus:ring-2 focus:ring-[#0F4C5C]">
 
-<!-- BODYBOARD -->
-<div class="min-w-[140px]">
-<div class="font-bold mb-3">BODYBOARD</div>
+    <button id="mobile-search-trigger" onclick="focusMobileSearch()" class="md:hidden text-black hover:text-[#0F4C5C] p-2">
+      <i class="fa-solid fa-magnifying-glass text-xl"></i>
+    </button>
 
-<a onclick="menuClick('Bodyboard','Bodyboards')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Bodyboards</a>
-<a onclick="menuClick('Bodyboard','Aletas')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Aletas</a>
-<a onclick="menuClick('Bodyboard','Medias')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Medias</a>
-<a onclick="menuClick('Bodyboard','Sujetadores')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Sujetadores</a>
+    <button onclick="toggleCart()" class="relative">
+      <i id="cart-icon" class="fa-solid fa-cart-shopping text-xl"></i>
+      <span id="cart-count" class="absolute -top-2 -right-2 bg-[#ff4136] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
+    </button>
 
-</div>
-
-<!-- PRENDAS TERMICAS -->
-<div class="min-w-[140px]">
-  <div class="font-bold mb-3">PRENDAS TERMICAS</div>
-
-  <a onclick="menuClick('Prendas Termicas','Licras')" class="block py-1 hover:text-[#001f3f] cursor-pointer">
-    Licras
-  </a>
-
-  <a onclick="menuClick('Prendas Termicas','Camisetas')" class="block py-1 hover:text-[#001f3f] cursor-pointer">
-    Camisetas
-  </a>
-
-  <a onclick="menuClick('Prendas Termicas','Cambiadores')" class="block py-1 hover:text-[#001f3f] cursor-pointer">
-    Cambiadores
-  </a>
-
-  <a onclick="menuClick('Prendas Termicas','Gorras')" class="block py-1 hover:text-[#001f3f] cursor-pointer">
-    Gorras
-  </a>
-</div>
-
-<!-- WETBAGS -->
-<div class="min-w-[140px]">
-<div class="font-bold mb-3">WETBAGS</div>
-
-<a onclick="menuClick('Wetbags/Drybags','Wetbags')" class="block py-1 hover:text-[#001f3f] cursor-pointer">
-Wetbags
-</a>
-
-<a onclick="menuClick('Wetbags/Drybags','Drybags')" class="block py-1 hover:text-[#001f3f] cursor-pointer">
-Drybags
-</a>
-</div>
-
-<!-- SKATE -->
-<div class="min-w-[140px]">
-  <div class="font-bold mb-3">SKATE</div>
-
-  <a onclick="menuClick('Skateboards','Surfskates')" class="block py-1 hover:text-[#001f3f] cursor-pointer">
-    Surfskates
-  </a>
-
-  <a onclick="menuClick('Skateboards','Skateboards')" class="block py-1 hover:text-[#001f3f] cursor-pointer">
-    Skateboards
-  </a>
-
-  <a onclick="menuClick('Skateboards','Longboards')" class="block py-1 hover:text-[#001f3f] cursor-pointer">
-    Longboards
-  </a>
-
-  <a onclick="menuClick('Skateboards','Oldschool')" class="block py-1 hover:text-[#001f3f] cursor-pointer">
-    Oldschool
-  </a>
-
-  <a onclick="menuClick('Skateboards','Componentes')" class="block py-1 hover:text-[#001f3f] cursor-pointer">
-    Componentes
-  </a>
-</div>
-
-<!-- ACCESORIOS -->
-<div class="pr-6">
-<div class="font-bold mb-3">ACCESORIOS</div>
-
-<div class="grid grid-cols-2 gap-x-28 gap-y-3 text-sm">
-
-<div>
-<div class="text-xs font-bold text-gray-400 mt-1 mb-1">Equipamiento</div>
-<a onclick="menuClick('Accesorios','Leashes')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Leashes</a>
-<a onclick="menuClick('Accesorios','Quillas')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Quillas</a>
-<a onclick="menuClick('Accesorios','Decks')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Decks</a>
-<a onclick="menuClick('Accesorios','Cera')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Cera</a>
-<a onclick="menuClick('Accesorios','Fundas')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Fundas</a>
-
-<div class="text-xs font-bold text-gray-400 mt-3 mb-1">Transporte</div>
-<a onclick="menuClick('Accesorios','Racks')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Racks</a>
-<a onclick="menuClick('Accesorios','Bolsos')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Bolsos</a>
-</div>
-
-<div>
-<div class="text-xs font-bold text-gray-400 mt-1 mb-1">Reparación</div>
-<a onclick="menuClick('Accesorios','Herramientas')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Herramientas</a>
-<a onclick="menuClick('Accesorios','Reparacion')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Reparación</a>
-
-<div class="text-xs font-bold text-gray-400 mt-3 mb-1">Seguridad</div>
-<a onclick="menuClick('Accesorios','Cascos')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Cascos</a>
-<a onclick="menuClick('Accesorios','Proteccion')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Protección</a>
-
-<div class="text-xs font-bold text-gray-400 mt-3 mb-1">Otros</div>
-<a onclick="menuClick('Accesorios','Natacion')" class="block py-1 hover:text-[#001f3f] cursor-pointer">Natación</a>
-</div>
-
-</div>
-</div>
-</div>
-
-</div>
-
-<!-- USADOS -->
-<div id="usados-menu" class="group relative">
-
-<span class="cursor-pointer hover:text-[#001f3f] flex items-center gap-1 whitespace-nowrap">
-  USADOS
-  <svg id="arrow-usados"
-    class="w-4 h-4 transition-transform duration-300 group-hover:rotate-180"
-    fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-      d="M19 9l-7 7-7-7"/>
-  </svg>
-</span>
-
-<div class="absolute left-1/2 -translate-x-1/2 top-full
-w-54	 bg-white shadow-lg rounded-lg p-4 mt-2
-opacity-0 invisible translate-y-2
-group-hover:opacity-100 group-hover:visible group-hover:translate-y-0
-transition-all duration-300 ease-out">
-
-<a onclick="navigateTo('vender'); closeUsadosMenu(); setTimeout(resetUsadosMenu, 50);" 
-class="block py-1 hover:text-[#001f3f] cursor-pointer">
-Vender
-</a>
-
-<a onclick="renderReRideInfo(); closeUsadosMenu(); setTimeout(resetUsadosMenu, 50);" 
-class="block py-1 hover:text-[#0F4C5C] cursor-pointer border-t border-gray-100 mt-1 pt-1 text-xs font-bold text-green-600">
-✨ ¿Cómo comprar usados?
-</a>
-
-</div>
-</div>
-
-<span onclick="navigateTo('nosotros')" class="cursor-pointer hover:text-[#001f3f] whitespace-nowrap">
-NOSOTROS
-</span>
-
-<span onclick="navigateTo('contacto')" class="cursor-pointer hover:text-[#001f3f] whitespace-nowrap">
-CONTACTO
-</span>
-
-<span onclick="navigateTo('noticias')" class="cursor-pointer hover:text-[#001f3f] whitespace-nowrap">
-NOTICIAS
-</span>
-
-<button onclick="navigateTo('productos')"
-class="hidden lg:block bg-[#1f6f78] text-white px-5 py-2 rounded-full font-bold hover:scale-105 transition ml-4 whitespace-nowrap">
-Explorar catálogo
-</button>
-
-</div> <div onclick="navigateTo('cuenta')" class="cursor-pointer hover:text-[#0F4C5C] flex items-center gap-2 ml-4">
-  <i class="fa-regular fa-user text-xl"></i>
-  <span class="hidden xl:block text-sm font-bold">CUENTA</span>
-</div>
-
-</div>
-
-<!-- DERECHA -->
-<div class="flex items-center gap-8 ml-auto">
-
-<input 
-type="text"
-id="search-input"
-placeholder="Buscar productos..."
-class="hidden md:block w-full max-w-xs xl:max-w-md px-5 py-2 border border-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-[#0F4C5C] focus:border-[#0F4C5C]"
-onkeydown="handleSearch(event)"
->
-
-<button id="mobile-search-trigger" onclick="focusMobileSearch()" class="md:hidden text-black hover:text-[#0F4C5C] transition-colors p-2">
-  <i class="fa-solid fa-magnifying-glass text-xl"></i>
-</button>
-
-<button onclick="toggleCart()" class="relative">
-<i id="cart-icon" class="fa-solid fa-cart-shopping text-xl"></i>
-<span id="cart-count"
-class="absolute -top-2 -right-2 bg-[#ff4136] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-0
-</span>
-</button>
-
-<button class="xl:hidden text-xl" onclick="toggleMenu()">
-<i class="fa-solid fa-bars"></i>
-</button>
-
-</div>
-
+    <button class="xl:hidden text-xl" onclick="toggleMenu()">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+  </div>
 </nav>
 
 <!-- NOTIFICACIÓN CARRITO (FUERA DEL NAV) -->
