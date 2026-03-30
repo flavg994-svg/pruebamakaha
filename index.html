@@ -12660,19 +12660,17 @@ function renderFormularioAuth() {
                 <div class="text-center mb-8">
                     <img src="https://i.imgur.com/BPUD4wx.png" alt="Makaha Logo" class="w-20 mx-auto mb-4">
                     <h2 class="text-2xl font-bold text-[#0F4C5C]">Mi Cuenta Makaha</h2>
-                    <p class="text-gray-500 text-sm">Ingresa o regístrate para gestionar tus pedidos</p>
                 </div>
                 <div class="space-y-4">
                     <input id="auth-email" type="email" placeholder="Correo electrónico" 
-                           class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#0F4C5C] outline-none shadow-sm">
+                           class="w-full px-4 py-3 rounded-lg border border-gray-300 outline-none">
                     <input id="auth-pass" type="password" placeholder="Contraseña" 
-                           class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#0F4C5C] outline-none shadow-sm">
-                    <button onclick="handleLogin()" 
-                            class="w-full bg-[#0F4C5C] text-white font-bold py-3 rounded-lg hover:bg-[#1f6f78] transition shadow-md">
+                           class="w-full px-4 py-3 rounded-lg border border-gray-300 outline-none">
+                    
+                    <button onclick="handleLogin()" class="w-full bg-[#0F4C5C] text-white font-bold py-3 rounded-lg hover:bg-[#1f6f78] transition">
                         INICIAR SESIÓN
                     </button>
-                    <button onclick="handleRegister()" 
-                            class="w-full bg-white text-[#0F4C5C] font-bold py-3 rounded-lg hover:bg-gray-50 transition border border-[#0F4C5C]">
+                    <button onclick="handleRegister()" class="w-full bg-white text-[#0F4C5C] font-bold py-3 rounded-lg border border-[#0F4C5C]">
                         CREAR CUENTA NUEVA
                     </button>
                 </div>
@@ -12704,11 +12702,20 @@ function renderPerfilUsuario(user) {
 
 // --- 3. LÓGICA DE LOS BOTONES (HANDLERS) ---
 async function handleLogin() {
-    const email = document.getElementById('auth-email').value;
-    const pass = document.getElementById('auth-pass').value;
+    const emailValue = document.getElementById('auth-email').value.trim();
+    const passValue = document.getElementById('auth-pass').value;
     const errorDiv = document.getElementById('auth-error');
+
+    console.log("Intentando Login con:", emailValue); // ESTO ES PARA REVISAR
+
+    if (!emailValue || !emailValue.includes('@')) {
+        errorDiv.innerText = "Por favor, ingresa un correo válido.";
+        errorDiv.classList.remove('hidden');
+        return;
+    }
+
     try {
-        await auth.signInWithEmailAndPassword(email, pass);
+        await auth.signInWithEmailAndPassword(emailValue, passValue);
         navigateTo('inicio');
     } catch (error) {
         errorDiv.innerText = "Error: " + error.message;
@@ -12717,50 +12724,30 @@ async function handleLogin() {
 }
 
 async function handleRegister() {
-    // 1. Capturamos los datos y usamos .trim() para borrar espacios invisibles
-    const emailInput = document.getElementById('auth-email');
-    const passInput = document.getElementById('auth-pass');
+    const emailValue = document.getElementById('auth-email').value.trim();
+    const passValue = document.getElementById('auth-pass').value;
     const errorDiv = document.getElementById('auth-error');
 
-    const email = emailInput.value.trim();
-    const pass = passInput.value;
+    console.log("Intentando Registro con:", emailValue); // ESTO ES PARA REVISAR
 
-    // 2. Limpiamos errores previos
-    errorDiv.classList.add('hidden');
-    errorDiv.innerText = "";
-
-    // 3. Validaciones básicas antes de molestar a Firebase
-    if (!email || !email.includes('@')) {
+    if (!emailValue || !emailValue.includes('@')) {
         errorDiv.innerText = "Por favor, ingresa un correo válido.";
         errorDiv.classList.remove('hidden');
         return;
     }
 
-    if (pass.length < 6) {
+    if (passValue.length < 6) {
         errorDiv.innerText = "La contraseña debe tener al menos 6 caracteres.";
         errorDiv.classList.remove('hidden');
         return;
     }
 
-    // 4. Intento de registro en Firebase
     try {
-        await auth.createUserWithEmailAndPassword(email, pass);
-        alert("¡Cuenta creada! Bienvenido a Makaha.");
-        navigateTo('inicio'); // Te manda al inicio después de crear la cuenta
+        await auth.createUserWithEmailAndPassword(emailValue, passValue);
+        alert("¡Cuenta creada! Aloha.");
+        navigateTo('inicio');
     } catch (error) {
-        console.error("Error en registro:", error.code);
-        
-        // Traducimos los errores para que el cliente no vea cosas en inglés
-        if (error.code === 'auth/email-already-in-use') {
-            errorDiv.innerText = "Este correo ya está registrado en Makaha.";
-        } else if (error.code === 'auth/invalid-email') {
-            errorDiv.innerText = "El formato del correo es incorrecto.";
-        } else if (error.code === 'auth/weak-password') {
-            errorDiv.innerText = "La contraseña es muy débil.";
-        } else {
-            errorDiv.innerText = "Error: " + error.message;
-        }
-        
+        errorDiv.innerText = "Error: " + error.message;
         errorDiv.classList.remove('hidden');
     }
 }
