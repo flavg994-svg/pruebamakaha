@@ -12654,27 +12654,23 @@ function generarBoletaPDF(totalSoles) {
 function renderFormularioAuth() {
     const main = document.getElementById("main-content");
     if (!main) return;
+    
+    // Cambiamos los IDs a 'mkh-email' y 'mkh-pass' para que sean ÚNICOS
     main.innerHTML = `
-        <div class="flex flex-col items-center justify-center min-h-[60vh] px-4 py-10 bg-gray-50">
+        <div class="flex flex-col items-center justify-center min-h-[60vh] px-4 py-10">
             <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-gray-100">
                 <div class="text-center mb-8">
-                    <img src="https://i.imgur.com/BPUD4wx.png" alt="Makaha Logo" class="w-20 mx-auto mb-4">
+                    <img src="https://i.imgur.com/BPUD4wx.png" alt="Logo" class="w-20 mx-auto mb-4">
                     <h2 class="text-2xl font-bold text-[#0F4C5C]">Mi Cuenta Makaha</h2>
                 </div>
                 <div class="space-y-4">
-                    <input id="auth-email" type="email" placeholder="Correo electrónico" 
-                           class="w-full px-4 py-3 rounded-lg border border-gray-300 outline-none">
-                    <input id="auth-pass" type="password" placeholder="Contraseña" 
-                           class="w-full px-4 py-3 rounded-lg border border-gray-300 outline-none">
+                    <input id="mkh-email" type="email" placeholder="Correo" class="w-full px-4 py-3 border rounded-lg">
+                    <input id="mkh-pass" type="password" placeholder="Contraseña" class="w-full px-4 py-3 border rounded-lg">
                     
-                    <button onclick="handleLogin()" class="w-full bg-[#0F4C5C] text-white font-bold py-3 rounded-lg hover:bg-[#1f6f78] transition">
-                        INICIAR SESIÓN
-                    </button>
-                    <button onclick="handleRegister()" class="w-full bg-white text-[#0F4C5C] font-bold py-3 rounded-lg border border-[#0F4C5C]">
-                        CREAR CUENTA NUEVA
-                    </button>
+                    <button onclick="handleLogin()" class="w-full bg-[#0F4C5C] text-white py-3 rounded-lg font-bold">INICIAR SESIÓN</button>
+                    <button onclick="handleRegister()" class="w-full border border-[#0F4C5C] text-[#0F4C5C] py-3 rounded-lg font-bold">CREAR CUENTA</button>
                 </div>
-                <div id="auth-error" class="mt-4 text-red-500 text-sm text-center hidden font-medium"></div>
+                <div id="auth-error" class="mt-4 text-red-500 text-sm text-center hidden"></div>
             </div>
         </div>
     `;
@@ -12700,54 +12696,47 @@ function renderPerfilUsuario(user) {
     `;
 }
 
-// --- 3. LÓGICA DE LOS BOTONES (HANDLERS) ---
+// 2. EL LOGUEO
 async function handleLogin() {
-    const emailValue = document.getElementById('auth-email').value.trim();
-    const passValue = document.getElementById('auth-pass').value;
+    const email = document.getElementById('mkh-email').value.trim();
+    const pass = document.getElementById('mkh-pass').value;
     const errorDiv = document.getElementById('auth-error');
 
-    console.log("Intentando Login con:", emailValue); // ESTO ES PARA REVISAR
+    console.log("AHORA SÍ captura email:", email); // Revisa esto en consola
 
-    if (!emailValue || !emailValue.includes('@')) {
-        errorDiv.innerText = "Por favor, ingresa un correo válido.";
+    if (!email || !email.includes('@')) {
+        errorDiv.innerText = "Correo no válido";
         errorDiv.classList.remove('hidden');
         return;
     }
 
     try {
-        await auth.signInWithEmailAndPassword(emailValue, passValue);
+        await auth.signInWithEmailAndPassword(email, pass);
         navigateTo('inicio');
     } catch (error) {
-        errorDiv.innerText = "Error: " + error.message;
+        errorDiv.innerText = error.message;
         errorDiv.classList.remove('hidden');
     }
 }
 
+// 3. EL REGISTRO
 async function handleRegister() {
-    const emailValue = document.getElementById('auth-email').value.trim();
-    const passValue = document.getElementById('auth-pass').value;
+    const email = document.getElementById('mkh-email').value.trim();
+    const pass = document.getElementById('mkh-pass').value;
     const errorDiv = document.getElementById('auth-error');
 
-    console.log("Intentando Registro con:", emailValue); // ESTO ES PARA REVISAR
-
-    if (!emailValue || !emailValue.includes('@')) {
-        errorDiv.innerText = "Por favor, ingresa un correo válido.";
-        errorDiv.classList.remove('hidden');
-        return;
-    }
-
-    if (passValue.length < 6) {
-        errorDiv.innerText = "La contraseña debe tener al menos 6 caracteres.";
+    if (pass.length < 6) {
+        errorDiv.innerText = "Mínimo 6 caracteres";
         errorDiv.classList.remove('hidden');
         return;
     }
 
     try {
-        await auth.createUserWithEmailAndPassword(emailValue, passValue);
-        alert("¡Cuenta creada! Aloha.");
+        await auth.createUserWithEmailAndPassword(email, pass);
+        alert("¡Cuenta creada!");
         navigateTo('inicio');
     } catch (error) {
-        errorDiv.innerText = "Error: " + error.message;
+        errorDiv.innerText = error.message;
         errorDiv.classList.remove('hidden');
     }
 }
