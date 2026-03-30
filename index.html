@@ -1500,25 +1500,30 @@ var mkh_startX, mkh_offset;
 let currentPageCatalog = 1;
 const PRODUCTS_PER_PAGE = 16;
 
+// Configuración Real de Makaha Surf Shop
 const firebaseConfig = {
-  apiKey: "TU_API_KEY",
-  authDomain: "tu-proyecto.firebaseapp.com",
-  projectId: "tu-proyecto-id",
-  storageBucket: "tu-proyecto.appspot.com",
-  messagingSenderId: "123456789",
-  appId: "1:123456789:web:abcdef12345"
+  apiKey: "AIzaSyAIt7qDixDwPfPPMiqH6hQG2_pyEpwGLLc",
+  authDomain: "surfshop-4b8a9.firebaseapp.com",
+  projectId: "surfshop-4b8a9",
+  storageBucket: "surfshop-4b8a9.firebasestorage.app",
+  messagingSenderId: "443797950812",
+  appId: "1:443797950812:web:03b4006b1d32eda217f199",
+  measurementId: "G-JL5DHKCC2W"
 };
 
 // Inicializar Firebase
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
+
+// Definir la variable auth para usarla en toda la tienda
 const auth = firebase.auth();
 
-// El "Guardián" que vigila si hay sesión iniciada
+// El "Guardián" que vigila la sesión en tiempo real
 auth.onAuthStateChanged((user) => {
   if (user) {
     console.log("Sesión activa:", user.email);
+    // Aquí podrías hacer que el icono de "Mi Cuenta" cambie de color o muestre la inicial
   } else {
     console.log("No hay usuario activo");
   }
@@ -12644,34 +12649,8 @@ function generarBoletaPDF(totalSoles) {
     doc.save(`Boleta_Makaha_${getVal('checkout-document')}.pdf`);
 }
 
-function registrarUsuario(email, password) {
-  auth.createUserWithEmailAndPassword(email, password)
-    .then((userCredential) => {
-      console.log("Usuario registrado:", userCredential.user);
-      alert("¡Cuenta creada con éxito!");
-      navigateTo('inicio');
-    })
-    .catch((error) => {
-      alert("Error: " + error.message);
-    });
-}
 
-// ... al final de tus scripts, antes de cerrar </script> ...
-
-const auth = firebase.auth();
-
-// El guardián que vigila la sesión
-auth.onAuthStateChanged((user) => {
-  if (user) {
-    console.log("Sesión activa de:", user.email);
-    // Por ejemplo: podrías cambiar el icono de usuario por su inicial
-  } else {
-    console.log("No hay nadie logueado");
-  }
-});
-
-// --- 1. LAS FUNCIONES DE DISEÑO (RENDERS) ---
-
+// --- 2. FUNCIONES DE DISEÑO (RENDERS) ---
 function renderFormularioAuth() {
     const main = document.getElementById("main-content");
     if (!main) return;
@@ -12723,13 +12702,11 @@ function renderPerfilUsuario(user) {
     `;
 }
 
-// --- 2. LA LÓGICA DE LOS BOTONES (HANDLERS) ---
-
+// --- 3. LÓGICA DE LOS BOTONES (HANDLERS) ---
 async function handleLogin() {
     const email = document.getElementById('auth-email').value;
     const pass = document.getElementById('auth-pass').value;
     const errorDiv = document.getElementById('auth-error');
-    
     try {
         await auth.signInWithEmailAndPassword(email, pass);
         navigateTo('inicio');
@@ -12743,7 +12720,6 @@ async function handleRegister() {
     const email = document.getElementById('auth-email').value;
     const pass = document.getElementById('auth-pass').value;
     const errorDiv = document.getElementById('auth-error');
-    
     try {
         await auth.createUserWithEmailAndPassword(email, pass);
         alert("¡Cuenta creada! Bienvenido a Makaha.");
@@ -12760,4 +12736,7 @@ function handleLogout() {
     });
 }
 
+// EL CIERRE FINAL (Asegúrate de que esto sea lo último de tu archivo)
 </script>
+</body>
+</html>
