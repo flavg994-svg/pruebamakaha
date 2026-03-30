@@ -12717,15 +12717,50 @@ async function handleLogin() {
 }
 
 async function handleRegister() {
-    const email = document.getElementById('auth-email').value;
-    const pass = document.getElementById('auth-pass').value;
+    // 1. Capturamos los datos y usamos .trim() para borrar espacios invisibles
+    const emailInput = document.getElementById('auth-email');
+    const passInput = document.getElementById('auth-pass');
     const errorDiv = document.getElementById('auth-error');
+
+    const email = emailInput.value.trim();
+    const pass = passInput.value;
+
+    // 2. Limpiamos errores previos
+    errorDiv.classList.add('hidden');
+    errorDiv.innerText = "";
+
+    // 3. Validaciones básicas antes de molestar a Firebase
+    if (!email || !email.includes('@')) {
+        errorDiv.innerText = "Por favor, ingresa un correo válido.";
+        errorDiv.classList.remove('hidden');
+        return;
+    }
+
+    if (pass.length < 6) {
+        errorDiv.innerText = "La contraseña debe tener al menos 6 caracteres.";
+        errorDiv.classList.remove('hidden');
+        return;
+    }
+
+    // 4. Intento de registro en Firebase
     try {
         await auth.createUserWithEmailAndPassword(email, pass);
         alert("¡Cuenta creada! Bienvenido a Makaha.");
-        navigateTo('inicio');
+        navigateTo('inicio'); // Te manda al inicio después de crear la cuenta
     } catch (error) {
-        errorDiv.innerText = "Error: " + error.message;
+        console.error("Error en registro:", error.code);
+        
+        // Traducimos los errores para que el cliente no vea cosas en inglés
+        if (error.code === 'auth/email-already-in-use') {
+            errorDiv.innerText = "Este correo ya está registrado en Makaha.";
+        } else if (error.code === 'auth/invalid-email') {
+            errorDiv.innerText = "El formato del correo es incorrecto.";
+        } else if (error.code === 'auth/weak-password') {
+            errorDiv.innerText = "La contraseña es muy débil.";
+        } else {
+            errorDiv.innerText = "Error: " + error.message;
+        }
+        
         errorDiv.classList.remove('hidden');
     }
 }
