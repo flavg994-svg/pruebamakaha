@@ -25,6 +25,10 @@
       emailjs.init("1wuQB-gzoT910vgEQ"); // Reemplaza con tu Public Key de EmailJS
    })();
 </script>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 	
 <style>
 
@@ -1123,6 +1127,11 @@ class="hidden lg:block bg-[#1f6f78] text-white px-5 py-2 rounded-full font-bold 
 Explorar catálogo
 </button>
 
+</div> <div onclick="navigateTo('cuenta')" class="cursor-pointer hover:text-[#0F4C5C] flex items-center gap-2 ml-4">
+  <i class="fa-regular fa-user text-xl"></i>
+  <span class="hidden xl:block text-sm font-bold">MI CUENTA</span>
+</div>
+
 </div>
 
 <!-- DERECHA -->
@@ -1491,6 +1500,29 @@ var mkh_startX, mkh_offset;
 let currentPageCatalog = 1;
 const PRODUCTS_PER_PAGE = 16;
 
+const firebaseConfig = {
+  apiKey: "TU_API_KEY",
+  authDomain: "tu-proyecto.firebaseapp.com",
+  projectId: "tu-proyecto-id",
+  storageBucket: "tu-proyecto.appspot.com",
+  messagingSenderId: "123456789",
+  appId: "1:123456789:web:abcdef12345"
+};
+
+// Inicializar Firebase
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
+const auth = firebase.auth();
+
+// El "Guardián" que vigila si hay sesión iniciada
+auth.onAuthStateChanged((user) => {
+  if (user) {
+    console.log("Sesión activa:", user.email);
+  } else {
+    console.log("No hay usuario activo");
+  }
+});
 
 function captureCheckoutData(){
 
@@ -1553,9 +1585,9 @@ images:[
 description:"Bloqueador solar con proteccion +30 de 15gr.",
 sizes:["15gr"],
 colors:["Cacao"],
-stock:6,
+stock:2,
 stockBySize:{
-"15gr":6
+"15gr":2
 }
 },
 {
@@ -1575,9 +1607,9 @@ images:[
 description:"Traje neopreno Response SDL flatlock steamer 3/2mm.",
 sizes:["XL","L","S"],
 colors:["Plomo/Azul","Azul/Rojo"],
-stock:4,
+stock:3,
 stockBySize:{
-"XL":1,"L":1,"S":2,
+"XL":1,"L":0,"S":2,
 },
 
 stockByVariant:{
@@ -1585,7 +1617,7 @@ stockByVariant:{
 "XL-Azul/Rojo":0,
 
 "L-Plomo/Azul":0,
-"L-Azul/Rojo":1,
+"L-Azul/Rojo":0,
 
 "S-Plomo/Azul":0,
 "S-Azul/Rojo":2
@@ -1724,7 +1756,7 @@ images:[
 description:"CARACTERÍSTICAS > Capacidad de 35L, mochila ideal para el día > Compartimento principal totalmente impermeable > Construcción soldada de alta frecuencia > Lona balística 500D, resistente a la abrasión > Cierre enrollable",
 sizes:["35L"],
 colors:["Negro"],
-stock:4,
+stock:3,
 stockBySize:{
 "35L":3
 }
@@ -1967,7 +1999,7 @@ name:"Longboard St. Pauli 9'1",
 price:231.58,
 category:"Tablas",
 subcategory:"Longboards",
-condition:"Segunda",
+condition:"",
 keywords:["tabla","surfboard","longboard","surf","tablas"],
 img:"https://res.cloudinary.com/dtz97n9cv/image/upload/v1773891780/39_vnveqp.jpg",
 images:[
@@ -1977,9 +2009,9 @@ images:[
 description:"Longboard PU single fin +2. 77.4 litros.",
 sizes:["9'1"],
 colors:["Blanco"],
-stock:1,
+stock:0,
 stockBySize:{
-"9'1":1
+"9'1":0
 }
 },
 {
@@ -2093,7 +2125,7 @@ name:"Shortboard OX 6'3",
 price:230,
 category:"Tablas",
 subcategory:"Shortboards",
-condition:"Segunda",
+condition:"",
 keywords:["tabla","surfboard","shortboard","surf","tablas"],
 img:"https://res.cloudinary.com/dfdwxgvdg/image/upload/v1773942282/dwsd1_rwc2qf.jpg",
 images:[
@@ -2414,7 +2446,7 @@ name:"Martinez evo 6'8",
 price:325,
 category:"Tablas",
 subcategory:"Evolutiva",
-condition:"Segunda",
+condition:"",
 keywords:["tabla","surfboard","shortboard","surf","tablas"],
 img:"https://res.cloudinary.com/dtz97n9cv/image/upload/v1773896772/11244_10_ejldt8.jpg",
 images:[
@@ -2572,8 +2604,8 @@ images:[
 description:"Traje neopreno Response junior shorty 3/2mm para niños.",
 sizes:["JXL","JL","JM","JS","JXS","J3XS"],
 colors:["Negro/Celeste"],
-stock:6,
-stockBySize:{"JXL":1,"JL":1,"JM":1,"JS":1,"JXS":1,"J3XS":1}
+stock:9,
+stockBySize:{"JXL":2,"JL":2,"JM":1,"JS":1,"JXS":2,"J3XS":1}
 },
 {
 id:56,
@@ -2734,6 +2766,25 @@ stockBySize:{"L":1}
 },
 {
 id:66,
+name:"Gul Split Toe Power Boot 5mm",
+price:75,
+category:"Neoprenos",
+subcategory:"Botas",
+keywords:["botas","neopreno","surf","longboard","accesorios"],
+img:"https://res.cloudinary.com/dfdwxgvdg/image/upload/v1773971249/1_bsirlv.jpg",
+images:[
+"https://res.cloudinary.com/dfdwxgvdg/image/upload/v1773971249/1_bsirlv.jpg",
+"https://res.cloudinary.com/dfdwxgvdg/image/upload/v1773971249/2_xikflc.jpg",
+"https://res.cloudinary.com/dfdwxgvdg/image/upload/v1773971250/3_lyljhw.jpg"
+],
+description:"Botas de neopreno largas de 5mm con una suela flexible y duradera con zonas reforzadas en los dedos y tobillos.",
+sizes:["37","38","39","41","42","43","45","46"],
+colors:["Negro"],
+stock:14,
+stockBySize:{"37":1,"38":2,"39":1,"41":2,"42":4,"43":2,"45":1,"46":1}
+},
+{
+id:67,
 name:"Gul Strapped Power Slipper 3mm",
 price:65,
 category:"Neoprenos",
@@ -2748,27 +2799,8 @@ images:[
 description:"Botas de neopreno cortas de 3mm con una suela flexible y duradera con zonas reforzadas en los dedos y tobillos.",
 sizes:["39","41","42","43","45"],
 colors:["Negro"],
-stock:2,
-stockBySize:{"39":1,"41":0,"42":1,"43":0,"45":0}
-},
-{
-id:67,
-name:"Gul Split Toe Power Boot 5mm",
-price:75,
-category:"Neoprenos",
-subcategory:"Botas",
-keywords:["botas","neopreno","surf","longboard","accesorios"],
-img:"https://res.cloudinary.com/dfdwxgvdg/image/upload/v1773971249/1_bsirlv.jpg",
-images:[
-"https://res.cloudinary.com/dfdwxgvdg/image/upload/v1773971249/1_bsirlv.jpg",
-"https://res.cloudinary.com/dfdwxgvdg/image/upload/v1773971249/2_xikflc.jpg",
-"https://res.cloudinary.com/dfdwxgvdg/image/upload/v1773971250/3_lyljhw.jpg"
-],
-description:"Botas de neopreno largas de 5mm con una suela flexible y duradera con zonas reforzadas en los dedos y tobillos.",
-sizes:["37","38","39","41","42","43","45"],
-colors:["Negro"],
-stock:12,
-stockBySize:{"37":1,"38":2,"39":1,"41":2,"42":4,"43":2,"45":0}
+stock:3,
+stockBySize:{"39":1,"41":0,"42":1,"43":1,"45":0}
 },
 {
 id:68,
@@ -2811,12 +2843,12 @@ colors:["Azul","Celeste","Rosa","Naranja","Limon"],
 stock:5,
 
 stockBySize:{
-"L":2,
+"L":1,
 "M":3,
 },
 
 stockByVariant:{
-"L-Azul":1,
+"L-Azul":0,
 "L-Celeste":1,
 "L-Rosa":0,
 "L-Naranja":0,
@@ -3067,8 +3099,8 @@ images:[
 description:"Surf Natural el bloqueador solar especializado para surfistas Previene el daño solar producido por la radiación ultravioleta B(UVB), con FPS 50+",
 sizes:["60gr"],
 colors:["Blanco"],
-stock:14,
-stockBySize:{"60gr":14}
+stock:15,
+stockBySize:{"60gr":15}
 },
 {
 id:83,
@@ -3087,15 +3119,15 @@ images:[
 description:"Traje Semidry 3/2mm para hombre, ideal para climas templados",
 sizes:["60gr"],
 colors:["Blanco","Cacao"],
-stock:7,
+stock:8,
 
 stockBySize:{
-"60gr":7,
+"60gr":8,
 },
 
 stockByVariant:{
 "60gr-Blanco":4,
-"60gr-Cacao":3
+"60gr-Cacao":4
 
 }
 
@@ -3115,7 +3147,7 @@ images:[
 description:"Wetbag mediana para actividades acuáticas con compartimiento para guardar tus cosas.",
 sizes:["25lt"],
 colors:["Naranja"],
-stock:4,
+stock:3,
 stockBySize:{"25lt":3}
 },
 {
@@ -3130,8 +3162,8 @@ images:["https://res.cloudinary.com/dkazbai91/image/upload/v1774127441/213144_p3
 description:"Cera para tablas de surf",
 sizes:["15gr"],
 colors:["Blanco"],
-stock:11,
-stockBySize:{"15gr":11}
+stock:9,
+stockBySize:{"15gr":9}
 },
 {
 id:86,
@@ -3160,8 +3192,8 @@ images:["https://res.cloudinary.com/dkazbai91/image/upload/v1774127442/321321412
 description:"Cera para tablas de surf",
 sizes:["15gr"],
 colors:["Blanco"],
-stock:21,
-stockBySize:{"15gr":21}
+stock:16,
+stockBySize:{"15gr":16}
 },
 {
 id:88,
@@ -3190,8 +3222,8 @@ images:["https://res.cloudinary.com/dkazbai91/image/upload/v1774127442/213134123
 description:"Cera para tablas de surf",
 sizes:["15gr"],
 colors:["Blanco"],
-stock:7,
-stockBySize:{"15gr":7}
+stock:2,
+stockBySize:{"15gr":2}
 },
 {
 id:90,
@@ -3220,8 +3252,8 @@ images:["https://res.cloudinary.com/dkazbai91/image/upload/v1774127441/112222333
 description:"Cera para tablas de surf de 18 a 26 grados",
 sizes:["15gr"],
 colors:["Coconut"],
-stock:36,
-stockBySize:{"15gr":36}
+stock:35,
+stockBySize:{"15gr":35}
 },
 {
 id:92,
@@ -3247,7 +3279,7 @@ stockBySize:{"Adapter":2}
 {
 id:93,
 name:"Pita spicy 6ft",
-price:35,
+price:38,
 category:"Accesorios",
 subcategory:"Leashes",
 keywords:["leash","pita","pitas","surf","leash","spicy"],
@@ -3264,16 +3296,16 @@ images:[
 description:"Leash para tablas de surf de 6 pies marca spicy.",
 sizes:["6ft"],
 colors:["Negro","Morado","Verde","Naranja","Amarillo"],
-stock:4,
+stock:2,
 
 stockBySize:{
-"6ft":4
+"6ft":2
 },
 
 stockByVariant:{
-"6ft-Negro":2,
+"6ft-Negro":1,
 "6ft-Morado":1,
-"6ft-Verde":1,
+"6ft-Verde":0,
 "6ft-Naranja":0,
 "6ft-Amarillo":0
 }
@@ -3282,7 +3314,7 @@ stockByVariant:{
 {
 id:94,
 name:"Pita spicy 7ft",
-price:37,
+price:40,
 category:"Accesorios",
 subcategory:"Leashes",
 keywords:["leash","pita","pitas","surf","leash","spicy"],
@@ -3302,7 +3334,7 @@ stockBySize:{
 },
 
 stockByVariant:{
-"7ft-Negro":0,
+"7ft-Negro":1,
 "7ft-Morado":0,
 "7ft-Verde":1,
 "7ft-Naranja":1,
@@ -3313,7 +3345,7 @@ stockByVariant:{
 {
 id:95,
 name:"Pita spicy 8ft",
-price:38,
+price:42,
 category:"Accesorios",
 subcategory:"Leashes",
 keywords:["leash","pita","pitas","surf","leash","spicy"],
@@ -3325,16 +3357,16 @@ images:[
 description:"Leash para tablas de surf de 8 pies marca spicy.",
 sizes:["8ft"],
 colors:["Negro","Morado","Verde","Naranja","Azul"],
-stock:2,
+stock:1,
 
 stockBySize:{
-"8ft":2
+"8ft":1
 },
 
 stockByVariant:{
 "8ft-Negro":1,
 "8ft-Morado":0,
-"8ft-Verde":1,
+"8ft-Verde":0,
 "8ft-Naranja":0,
 "8ft-Azul":0
 }
@@ -3355,15 +3387,15 @@ images:[
 description:"Leash para tablas de surf de 9 pies marca spicy.",
 sizes:["9ft"],
 colors:["Negro","Azul"],
-stock:5,
+stock:4,
 
 stockBySize:{
-"9ft":5
+"9ft":4
 },
 
 stockByVariant:{
 "9ft-Negro":2,
-"9ft-Azul":3
+"9ft-Azul":2
 }
 
 },
@@ -3482,7 +3514,7 @@ images:[
 ],
 description:"Leash BIG WAVE para tablas de surf de 9 pies marca STAY COVERED.",
 sizes:["9ft"],
-colors:["Negro","Azul","Rosa","Naranja"],
+colors:["Negro","Azul"],
 stock:1,
 
 stockBySize:{
@@ -3491,9 +3523,7 @@ stockBySize:{
 
 stockByVariant:{
 "9ft-Negro":0,
-"9ft-Azul":1,
-"9ft-Rosa":0,
-"9ft-Naranja":1
+"9ft-Azul":1
 }
 
 },
@@ -3539,19 +3569,19 @@ images:[
 "https://res.cloudinary.com/dtz97n9cv/image/upload/v1774034687/1312312412_eo8ieq.jpg"
 ],
 description:"Leash para bodyboards marca Mutant.",
-sizes:["Onesize"],
+sizes:["8mm"],
 colors:["Verde","Morado","Celeste","Negro"],
-stock:9,
+stock:6,
 
 stockBySize:{
-"Onesize":9,
+"8mm":6,
 },
 
 stockByVariant:{
-"Onesize-Verde":3,
-"Onesize-Morado":2,
-"Onesize-Celeste":2,
-"Onesize-Negro":2
+"8mm-Verde":2,
+"8mm-Morado":2,
+"8mm-Celeste":0,
+"8mm-Negro":2
 }
 
 },
@@ -4462,13 +4492,13 @@ images:[
 description:"Funda de tela marca Fortuna.",
 sizes:["5,10","6,0","6,2","6,4"],
 colors:["Negro","Guinda","Plomo","Azul"],
-stock:6,
+stock:5,
 
 stockBySize:{
 "5,10":1,
-"6,0":2,
-"6,2":1,
-"6,4":2,
+"6,0":1,
+"6,2":2,
+"6,4":1,
 },
 
 stockByVariant:{
@@ -4477,19 +4507,19 @@ stockByVariant:{
 "5,10-Plomo":0,
 "5,10-Azul":0,
 
-"6,0-Negro":2,
+"6,0-Negro":1,
 "6,0-Guinda":0,
 "6,0-Plomo":0,
 "6,0-Azul":0,
 
-"6,2-Negro":0,
+"6,2-Negro":1,
 "6,2-Guinda":0,
 "6,2-Plomo":1,
 "6,2-Azul":0,
 
 "6,4-Negro":0,
 "6,4-Guinda":0,
-"6,4-Plomo":1,
+"6,4-Plomo":0,
 "6,4-Azul":1
 
 }
@@ -4858,11 +4888,11 @@ images:[
 description:"Aletas para bodyboard o natacion marca Gravital.",
 sizes:["XS","S","M","L"],
 colors:["Negro/Lima","Azul/Naranja","Negro/Rojo","Plomo/Naranja","Azul/Amarillo"],
-stock:6,
+stock:5,
 
 stockBySize:{
 "XS":1,
-"S":1,
+"S":0,
 "M":2,
 "L":2,
 },
@@ -4874,7 +4904,7 @@ stockByVariant:{
 "XS-Plomo/Naranja":0,
 "XS-Azul/Amarillo":0,
 
-"S-Negro/Lima":1,
+"S-Negro/Lima":0,
 "S-Azul/Naranja":0,
 "S-Negro/Rojo":0,
 "S-Plomo/Naranja":0,
@@ -4972,15 +5002,15 @@ images:[
 description:"Sujetadores de aletas mutant talla standard.",
 sizes:["Standard"],
 colors:["Negro","Azul","Rojo"],
-stock:9,
+stock:7,
 
 stockBySize:{
-"Standard":9,
+"Standard":7,
 },
 
 stockByVariant:{
-"Standard-Negro":3,
-"Standard-Azul":3,
+"Standard-Negro":2,
+"Standard-Azul":2,
 "Standard-Rojo":3
 }
 
@@ -5095,13 +5125,13 @@ images:[
 "https://res.cloudinary.com/dfdwxgvdg/image/upload/v1773712315/3_uzfdqi.jpg"
 ],
 description:"Sistema thruster quillas de carbono future talla M y L Makaha.",
-sizes:["M","L"],
+sizes:["L","XL"],
 colors:["Negro"],
-stock:4,
+stock:3,
 
 stockBySize:{
-"M":2,
-"L":2
+"L":1,
+"XL":2
 }
 
 },
@@ -5118,13 +5148,13 @@ images:[
 "https://res.cloudinary.com/dfdwxgvdg/image/upload/v1773712315/1_ptpgok.jpg"
 ],
 description:"Sistema thruster quillas de fibra FCS2 talla M y L Makaha.",
-sizes:["M","L"],
+sizes:["L","XL"],
 colors:["Negro"],
-stock:5,
+stock:3,
 
 stockBySize:{
-"M":0,
-"L":5
+"L":0,
+"XL":3
 }
 
 },
@@ -5207,15 +5237,15 @@ images:[
 description:"Sistema thruster quillas de plastico fcs1 talla M y L Makaha.",
 sizes:["M","L"],
 colors:["Blanco","Negro"],
-stock:5,
+stock:4,
 
 stockBySize:{
-"M":5,
+"M":4,
 "L":0,
 },
 
 stockByVariant:{
-"M-Blanco":4,
+"M-Blanco":3,
 "M-Negro":1,
 
 "L-Blanco":0,
@@ -5254,6 +5284,66 @@ stockByVariant:{
 "L-Negro":0
 }
 
+},
+{
+id:249,
+name:"Quillas plastico FUTURE Makaha",
+price:38,
+category:"Accesorios",
+subcategory:"Quillas",
+keywords:["quillas","quilla","surf","fcs2"],
+img:"https://res.cloudinary.com/dkazbai91/image/upload/v1774725461/GG23_u4q8du.jpg",
+images:[
+"https://res.cloudinary.com/dkazbai91/image/upload/v1774725461/GG23_u4q8du.jpg",
+"https://res.cloudinary.com/dkazbai91/image/upload/v1774725462/GGG2FDSF34_vn4yca.jpg"
+],
+description:"Sistema thruster de quillas de plastico FUTURE talla M y L Makaha.",
+sizes:["M","L"],
+colors:["Blanco","Negro"],
+stock:1,
+
+stockBySize:{
+"M":1,
+"L":0,
+},
+
+stockByVariant:{
+"M-Blanco":0,
+"M-Negro":1,
+
+"L-Blanco":0,
+"L-Negro":0
+}
+},
+{
+id:250,
+name:"Quillas plastico TWIN FUTURE Makaha",
+price:30,
+category:"Accesorios",
+subcategory:"Quillas",
+keywords:["quillas","quilla","surf","fcs2"],
+img:"https://res.cloudinary.com/dkazbai91/image/upload/v1774725462/TTG23_qdsoyh.jpg",
+images:[
+"https://res.cloudinary.com/dkazbai91/image/upload/v1774725462/TTG23_qdsoyh.jpg",
+"https://res.cloudinary.com/dkazbai91/image/upload/v1774725495/YYR2_1_rbmehh.jpg"
+],
+description:"Sistema thruster de quillas de plastico FUTURE talla M y L Makaha.",
+sizes:["M","L"],
+colors:["Blanco","Negro"],
+stock:4,
+
+stockBySize:{
+"M":4,
+"L":0,
+},
+
+stockByVariant:{
+"M-Blanco":2,
+"M-Negro":2,
+
+"L-Blanco":0,
+"L-Negro":0
+}
 },
 {
 id:166,
@@ -5307,15 +5397,15 @@ images:[
 description:"Traje Semidry 3/2mm para hombre, ideal para climas templados",
 sizes:["120gr"],
 colors:["Blanco","Cacao"],
-stock:6,
+stock:5,
 
 stockBySize:{
-"120gr":6,
+"120gr":5,
 },
 
 stockByVariant:{
 "120gr-Blanco":3,
-"120gr-Cacao":3
+"120gr-Cacao":2
 
 }
 
@@ -5332,8 +5422,8 @@ images:["https://res.cloudinary.com/dkazbai91/image/upload/v1774127441/213213124
 description:"Cera para tablas de surf",
 sizes:["15gr"],
 colors:["Blanco"],
-stock:3,
-stockBySize:{"15gr":3}
+stock:1,
+stockBySize:{"15gr":1}
 },
 {
 id:169,
@@ -5633,8 +5723,8 @@ images:[
 description:"Racks para maxima seguridad a la hora de llevar tus tablas de surf, sup o kayak en el carro",
 sizes:["Soft"],
 colors:["Negro"],
-stock:2,
-stockBySize:{"Soft":2}
+stock:1,
+stockBySize:{"Soft":1}
 },
 {
 id:183,
@@ -5702,18 +5792,36 @@ colors:["Negro","Blanco"],
 stock:6,
 
 stockBySize:{
-"8":5,
-"9":1,
+"8":3,
+"9":3,
 },
 
 stockByVariant:{
-"8-Negro":5,
+"8-Negro":3,
 "8-Blanco":0,
 
-"9-Negro":0,
+"9-Negro":2,
 "9-Blanco":1
 }
 
+},
+{
+id:253,
+name:"Quillas single fin plastico",
+price:45,
+category:"Accesorios",
+subcategory:"Quillas",
+keywords:["quillas","quilla","surf","fcs2"],
+img:"https://res.cloudinary.com/dkazbai91/image/upload/v1774727644/Texto_del_p%C3%A1rrafo_10_pat328.jpg",
+images:[
+"https://res.cloudinary.com/dkazbai91/image/upload/v1774727644/Texto_del_p%C3%A1rrafo_10_pat328.jpg",
+"https://res.cloudinary.com/dkazbai91/image/upload/v1774727644/Texto_del_p%C3%A1rrafo_10_pat328.jpg"
+],
+    description: "Single fin de plastico cola delfin de 9 pulgadas",
+    sizes: ["9"],
+    colors: ["Negro"],
+    stock: 2,
+    stockBySize: { "9": 2 }
 },
 {
 id:187,
@@ -5725,21 +5833,21 @@ keywords:["quillas","quilla","surf","fcs2","single","fins","fibra"],
 img:"https://res.cloudinary.com/dtz97n9cv/image/upload/v1774067625/123131_qwvrib.jpg",
 images:[
 "https://res.cloudinary.com/dtz97n9cv/image/upload/v1774067625/123131_qwvrib.jpg",
-"https://res.cloudinary.com/dtz97n9cv/image/upload/v1774067625/12313_zzro9v.jpg"
+"https://res.cloudinary.com/dkazbai91/image/upload/v1774726871/Texto_del_p%C3%A1rrafo_9_lw6wa0.jpg"
 ],
 description:"single fins de fibra Makaha.",
 sizes:["9","10"],
 colors:["Rojo","Blanco","Marron"],
-stock:5,
+stock:4,
 
 stockBySize:{
-"9":2,
+"9":1,
 "10":3,
 },
 
 stockByVariant:{
 "9-Rojo":1,
-"9-Blanco":1,
+"9-Blanco":0,
 "9-Marron":0,
 
 "10-Rojo":2,
@@ -6205,13 +6313,13 @@ stockBySize:{"6,8":2,"6,10":1}
     description: "Quillas de cajón con material flexible, diseñadas para evitar roturas y proporcionar mayor seguridad en el agua.",
     sizes: ["L"],
     colors: ["Amarillo", "Verde"],
-    stock: 3,
+    stock: 1,
     stockBySize: {
-      "L": 3
+      "L": 1
     },
     stockByVariant: {
-      "L-Amarillo": 1,
-      "L-Verde": 2
+      "L-Amarillo": 0,
+      "L-Verde": 1
     }
   },
   {
@@ -6772,10 +6880,10 @@ images:[
 "https://res.cloudinary.com/dtz97n9cv/image/upload/v1774331548/7jjk3j_pmpvau.jpg"
 ],
 description:"Botas de neopreno cortas de 3mm con una suela flexible y duradera con zonas reforzadas en los dedos y tobillos.",
-sizes:["39","41","42","43","45"],
+sizes:["39","41","42","43","45","46"],
 colors:["Negro"],
 stock:2,
-stockBySize:{"39":0,"41":0,"42":0,"43":2,"45":0}
+stockBySize:{"39":0,"41":0,"42":0,"43":0,"45":0,"46":2}
 },
 {
     id: 244,
@@ -6814,7 +6922,25 @@ stockBySize:{"39":0,"41":0,"42":0,"43":2,"45":0}
     stockBySize: { "6'6": 1 }
 },
 {
-    id: 246,
+    id: 245,
+    name: "Candado antirobos para llaves de auto Spicy",
+    price: 68.01,
+    category: "Accesorios",
+    subcategory: "Proteccion",
+    keywords: ["candado antirobo", "candado", "candado con clave", "candado spicy", "candado con llave"],
+    img: "https://res.cloudinary.com/dkazbai91/image/upload/v1774651895/acaa_ro93ds.jpg",
+    images: [
+        "https://res.cloudinary.com/dkazbai91/image/upload/v1774651895/aca11_srnllf.jpg",
+        "https://res.cloudinary.com/dkazbai91/image/upload/v1774651895/acaa_ro93ds.jpg"
+    ],
+    description: "Un candado para llaves de auto antes de hacer surf es una excelente manera de proteger tus llaves de los ladrones. Al elegir y usar un candado para llaves de auto antes de hacer surf de manera adecuada, puedes ayudar a mantener tus llaves seguras y protegidas.",
+    sizes: ["N/A"],
+    colors: ["Negro"],
+    stock: 2,
+    stockBySize: { "N/A": 2 }
+},
+{
+    id: 247,
     name: "Licra spicy",
     price: 41,
     category: "Prendas Termicas",
@@ -6850,24 +6976,71 @@ stockByVariant:{
 
 },
 {
-    id: 245,
-    name: "Candado antirobos para llaves de auto Spicy",
-    price: 68.01,
-    category: "Accesorios",
-    subcategory: "Proteccion",
-    keywords: ["candado antirobo", "candado", "candado con clave", "candado spicy", "candado con llave"],
-    img: "https://res.cloudinary.com/dkazbai91/image/upload/v1774651895/acaa_ro93ds.jpg",
-    images: [
-        "https://res.cloudinary.com/dkazbai91/image/upload/v1774651895/aca11_srnllf.jpg",
-        "https://res.cloudinary.com/dkazbai91/image/upload/v1774651895/acaa_ro93ds.jpg"
-    ],
-    description: "Un candado para llaves de auto antes de hacer surf es una excelente manera de proteger tus llaves de los ladrones. Al elegir y usar un candado para llaves de auto antes de hacer surf de manera adecuada, puedes ayudar a mantener tus llaves seguras y protegidas.",
-    sizes: ["N/A"],
-    colors: ["Negro"],
-    stock: 2,
-    stockBySize: { "N/A": 2 }
+id:248,
+name:"Pita MUTANT Bodyboard",
+price:46.40,
+category:"Accesorios",
+subcategory:"Leashes",
+keywords:["leash","pita","pitas","surf","leash","spicy","bodyboard"],
+img:"https://res.cloudinary.com/dkazbai91/image/upload/v1774722733/UIUU_pclgex.jpg",
+images:[
+"https://res.cloudinary.com/dkazbai91/image/upload/v1774722733/UIUU_pclgex.jpg",
+"https://res.cloudinary.com/dkazbai91/image/upload/v1774722733/UUHH_f1inmw.jpg"
+],
+description:"Leash para bodyboards marca Mutant big wave 8 mm.",
+sizes:["8mm"],
+colors:["Verde","Morado","Celeste","Negro"],
+stock:2,
+
+stockBySize:{
+"8mm":2,
+},
+
+stockByVariant:{
+"8mm-Verde":1,
+"8mm-Morado":0,
+"8mm-Celeste":1,
+"8mm-Negro":0
 }
 
+},
+{
+id:251,
+name:"Quillas Feather fins FCS2",
+price:125,
+category:"Accesorios",
+subcategory:"Quillas",
+keywords:["quillas","quilla","surf","fcs2"],
+img:"https://res.cloudinary.com/dkazbai91/image/upload/v1774725462/UIUU344_b81cwa.jpg",
+images:[
+"https://res.cloudinary.com/dkazbai91/image/upload/v1774725462/UIUU344_b81cwa.jpg",
+"https://res.cloudinary.com/dkazbai91/image/upload/v1774725462/UI2342UU_ycblub.jpg"
+],
+    description: "Thruster de quillas fcs2 feather fins",
+    sizes: ["L"],
+    colors: ["Negro"],
+    stock: 1,
+    stockBySize: { "L": 1 }
+},
+{
+id:252,
+name:"Quillas dorsal QUAD future plastico",
+price:45,
+category:"Accesorios",
+subcategory:"Quillas",
+keywords:["quillas","quilla","surf","fcs2"],
+img:"https://res.cloudinary.com/dkazbai91/image/upload/v1774725462/GG2342G_od17lb.jpg",
+images:[
+"https://res.cloudinary.com/dkazbai91/image/upload/v1774725462/GG2342G_od17lb.jpg",
+"https://res.cloudinary.com/dkazbai91/image/upload/v1774725462/GG23442_txlyln.jpg",
+"https://res.cloudinary.com/dkazbai91/image/upload/v1774725461/3242GG234_adwii0.jpg"
+],
+    description: "Quad de quillas future ",
+    sizes: ["Quad"],
+    colors: ["Blanco"],
+    stock: 1,
+    stockBySize: { "Quad": 1 }
+},
 ]
 };
 
@@ -7006,6 +7179,19 @@ function navigateTo(page, category = null, subcategory = null, id = null, fromPo
   else if (page === 'noticia') { renderNoticia(id); }
   else if (page === "reclamaciones") renderReclamaciones();
   if (page === "delivery") renderDelivery();
+
+else if (page === "reclamaciones") renderReclamaciones();
+  else if (page === "delivery") renderDelivery();
+  
+  // AQUÍ AGREGAS EL BLOQUE PARA LA CUENTA
+  else if (page === 'cuenta') {
+    const user = firebase.auth().currentUser;
+    if (user) {
+      renderPerfilUsuario(user);
+    } else {
+      renderFormularioAuth();
+    }
+  }
 
   window.scrollTo(0, 0);
 }
@@ -11086,7 +11272,6 @@ return;
 }
 
 function handleSecondHandToggle() {
-
     const checkbox = document.getElementById("secondhand-checkbox");
     const payBtn = document.getElementById("pay-btn");
 
@@ -11095,7 +11280,6 @@ function handleSecondHandToggle() {
     const isSecondHand = checkbox.checked;
 
     if (isSecondHand) {
-
         // SIMULAR BOTÓN DESACTIVADO
         payBtn.style.pointerEvents = "none";
         payBtn.style.opacity = "0.5";
@@ -11103,10 +11287,10 @@ function handleSecondHandToggle() {
         payBtn.classList.remove("bg-[#1f6f78]");
         payBtn.classList.add("bg-gray-300");
 
-        payBtn.innerText = "NO DISPONIBLE PARA 2DA MANO";
+        // USAMOS innerHTML para no borrar el icono
+        payBtn.innerHTML = '<i class="fas fa-credit-card mr-2"></i> NO DISPONIBLE PARA 2DA MANO';
 
     } else {
-
         // VOLVER A ACTIVAR
         payBtn.style.pointerEvents = "auto";
         payBtn.style.opacity = "1";
@@ -11114,10 +11298,9 @@ function handleSecondHandToggle() {
         payBtn.classList.remove("bg-gray-300");
         payBtn.classList.add("bg-[#1f6f78]");
 
-        payBtn.innerText = "CULQI PAY";
-
+        // RESTAURAMOS EL ICONO Y EL TEXTO ORIGINAL
+        payBtn.innerHTML = '<i class="fas fa-credit-card mr-2"></i> CULQIPAY TARJETA';
     }
-
 }
 
 function renderNoticias(){
@@ -12459,6 +12642,45 @@ function generarBoletaPDF(totalSoles) {
 
     // Descarga
     doc.save(`Boleta_Makaha_${getVal('checkout-document')}.pdf`);
+}
+
+function registrarUsuario(email, password) {
+  auth.createUserWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      console.log("Usuario registrado:", userCredential.user);
+      alert("¡Cuenta creada con éxito!");
+      navigateTo('inicio');
+    })
+    .catch((error) => {
+      alert("Error: " + error.message);
+    });
+}
+
+// ... al final de tus scripts, antes de cerrar </script> ...
+
+const auth = firebase.auth();
+
+// El guardián que vigila la sesión
+auth.onAuthStateChanged((user) => {
+  if (user) {
+    console.log("Sesión activa de:", user.email);
+    // Por ejemplo: podrías cambiar el icono de usuario por su inicial
+  } else {
+    console.log("No hay nadie logueado");
+  }
+});
+
+// Tus funciones de renderizado que faltan (Paso 5)
+function renderFormularioAuth() {
+   const main = document.getElementById("main-content");
+   main.innerHTML = `
+     <div class="flex flex-col items-center p-10">
+        <h2 class="text-2xl font-bold mb-4">Ingresa a tu cuenta Makaha</h2>
+        <input id="login-email" type="email" placeholder="Email" class="border p-2 mb-2 w-64 rounded">
+        <input id="login-pass" type="password" placeholder="Contraseña" class="border p-2 mb-4 w-64 rounded">
+        <button onclick="login()" class="bg-[#0F4C5C] text-white px-6 py-2 rounded-full">Entrar</button>
+     </div>
+   `;
 }
 
 </script>
