@@ -12650,30 +12650,51 @@ function generarBoletaPDF(totalSoles) {
 }
 
 
-// --- 2. FUNCIONES DE DISEÑO (RENDERS) ---
-function renderFormularioAuth() {
+// --- LAS FUNCIONES DE DISEÑO (RENDERS) ---
+function renderFormularioAuth(modo = 'login') {
     const main = document.getElementById("main-content");
     if (!main) return;
-    
-    // Cambiamos los IDs a 'mkh-email' y 'mkh-pass' para que sean ÚNICOS
-    main.innerHTML = `
-        <div class="flex flex-col items-center justify-center min-h-[60vh] px-4 py-10">
-            <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-gray-100">
-                <div class="text-center mb-8">
-                    <img src="https://i.imgur.com/BPUD4wx.png" alt="Logo" class="w-20 mx-auto mb-4">
-                    <h2 class="text-2xl font-bold text-[#0F4C5C]">Mi Cuenta Makaha</h2>
+
+    if (modo === 'registro') {
+        main.innerHTML = `
+            <div class="flex flex-col items-center justify-center min-h-[70vh] px-4 py-10 bg-gray-50">
+                <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-gray-100">
+                    <div class="text-center mb-6">
+                        <img src="https://i.imgur.com/BPUD4wx.png" alt="Logo" class="w-16 mx-auto mb-2">
+                        <h2 class="text-2xl font-bold text-[#0F4C5C]">Únete a la Comunidad</h2>
+                        <p class="text-gray-500 text-sm">Crea tu perfil para gestionar tus pedidos</p>
+                    </div>
+                    <div class="space-y-3">
+                        <input id="reg-name" type="text" placeholder="Nombre Completo" class="w-full px-4 py-3 border rounded-lg outline-none focus:ring-2 focus:ring-[#0F4C5C]">
+                        <input id="reg-phone" type="tel" placeholder="Teléfono / WhatsApp" class="w-full px-4 py-3 border rounded-lg outline-none focus:ring-2 focus:ring-[#0F4C5C]">
+                        <input id="reg-email" type="email" placeholder="Correo electrónico" class="w-full px-4 py-3 border rounded-lg outline-none focus:ring-2 focus:ring-[#0F4C5C]">
+                        <input id="reg-pass" type="password" placeholder="Contraseña (mín. 6 caracteres)" class="w-full px-4 py-3 border rounded-lg outline-none focus:ring-2 focus:ring-[#0F4C5C]">
+                        <button onclick="ejecutarRegistroCompleto()" class="w-full bg-[#0F4C5C] text-white py-3 rounded-lg font-bold shadow-md hover:bg-[#1f6f78] transition">CREAR MI CUENTA</button>
+                        <button onclick="renderFormularioAuth('login')" class="w-full text-[#0F4C5C] text-sm font-medium hover:underline">¿Ya tienes cuenta? Inicia sesión</button>
+                    </div>
+                    <div id="auth-error" class="mt-4 text-red-500 text-sm text-center hidden"></div>
                 </div>
-                <div class="space-y-4">
-                    <input id="mkh-email" type="email" placeholder="Correo" class="w-full px-4 py-3 border rounded-lg">
-                    <input id="mkh-pass" type="password" placeholder="Contraseña" class="w-full px-4 py-3 border rounded-lg">
-                    
-                    <button onclick="handleLogin()" class="w-full bg-[#0F4C5C] text-white py-3 rounded-lg font-bold">INICIAR SESIÓN</button>
-                    <button onclick="handleRegister()" class="w-full border border-[#0F4C5C] text-[#0F4C5C] py-3 rounded-lg font-bold">CREAR CUENTA</button>
-                </div>
-                <div id="auth-error" class="mt-4 text-red-500 text-sm text-center hidden"></div>
             </div>
-        </div>
-    `;
+        `;
+    } else {
+        main.innerHTML = `
+            <div class="flex flex-col items-center justify-center min-h-[60vh] px-4 py-10 bg-gray-50">
+                <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-gray-100">
+                    <div class="text-center mb-8">
+                        <img src="https://i.imgur.com/BPUD4wx.png" alt="Logo" class="w-20 mx-auto mb-4">
+                        <h2 class="text-2xl font-bold text-[#0F4C5C]">Mi Cuenta Makaha</h2>
+                    </div>
+                    <div class="space-y-4">
+                        <input id="mkh-email" type="email" placeholder="Correo" class="w-full px-4 py-3 border rounded-lg outline-none">
+                        <input id="mkh-pass" type="password" placeholder="Contraseña" class="w-full px-4 py-3 border rounded-lg outline-none">
+                        <button onclick="handleLogin()" class="w-full bg-[#0F4C5C] text-white py-3 rounded-lg font-bold">INICIAR SESIÓN</button>
+                        <button onclick="renderFormularioAuth('registro')" class="w-full border border-[#0F4C5C] text-[#0F4C5C] py-3 rounded-lg font-bold">SOY NUEVO / CREAR CUENTA</button>
+                    </div>
+                    <div id="auth-error" class="mt-4 text-red-500 text-sm text-center hidden"></div>
+                </div>
+            </div>
+        `;
+    }
 }
 
 function renderPerfilUsuario(user) {
@@ -12683,12 +12704,12 @@ function renderPerfilUsuario(user) {
         <div class="flex flex-col items-center justify-center min-h-[60vh] px-4 py-10 bg-gray-50">
             <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md text-center border border-gray-100">
                 <div class="w-20 h-20 bg-[#0F4C5C] text-white rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-4 shadow-lg">
-                    ${user.email.charAt(0).toUpperCase()}
+                    ${(user.displayName || user.email).charAt(0).toUpperCase()}
                 </div>
-                <h2 class="text-2xl font-bold text-gray-800 italic">¡ALOHA, SHAPER!</h2>
+                <h2 class="text-2xl font-bold text-gray-800 italic uppercase">¡ALOHA, ${user.displayName || 'SURFER'}!</h2>
                 <p class="text-gray-500 mb-6">${user.email}</p>
                 <div class="space-y-3">
-                    <button onclick="navigateTo('productos')" class="w-full py-3 bg-[#0F4C5C] text-white font-bold rounded-lg shadow-md">IR A LA TIENDA</button>
+                    <button onclick="navigateTo('productos')" class="w-full py-3 bg-[#0F4C5C] text-white font-bold rounded-lg shadow-md">IR AL CATÁLOGO</button>
                     <button onclick="handleLogout()" class="w-full py-3 bg-red-50 text-red-600 font-bold rounded-lg hover:bg-red-100 transition border border-red-200">CERRAR SESIÓN</button>
                 </div>
             </div>
@@ -12696,55 +12717,49 @@ function renderPerfilUsuario(user) {
     `;
 }
 
-// 2. EL LOGUEO
+// --- LÓGICA DE LOS BOTONES (HANDLERS) ---
+async function ejecutarRegistroCompleto() {
+    const nombre = document.getElementById('reg-name').value.trim();
+    const tel = document.getElementById('reg-phone').value.trim();
+    const email = document.getElementById('reg-email').value.trim();
+    const pass = document.getElementById('reg-pass').value;
+    const errorDiv = document.getElementById('auth-error');
+
+    if (!nombre || !tel || !email || pass.length < 6) {
+        errorDiv.innerText = "Completa todos los campos (Pass mín. 6 caracteres)";
+        errorDiv.classList.remove('hidden');
+        return;
+    }
+
+    try {
+        const userCredential = await auth.createUserWithEmailAndPassword(email, pass);
+        // Esto guarda el nombre del cliente en Firebase para mostrarlo luego
+        await userCredential.user.updateProfile({ displayName: nombre });
+        
+        alert("¡Cuenta creada, " + nombre + "!");
+        navigateTo('inicio');
+    } catch (error) {
+        errorDiv.innerText = "Error: " + error.message;
+        errorDiv.classList.remove('hidden');
+    }
+}
+
 async function handleLogin() {
     const email = document.getElementById('mkh-email').value.trim();
     const pass = document.getElementById('mkh-pass').value;
     const errorDiv = document.getElementById('auth-error');
 
-    console.log("AHORA SÍ captura email:", email); // Revisa esto en consola
-
-    if (!email || !email.includes('@')) {
-        errorDiv.innerText = "Correo no válido";
-        errorDiv.classList.remove('hidden');
-        return;
-    }
-
     try {
         await auth.signInWithEmailAndPassword(email, pass);
         navigateTo('inicio');
     } catch (error) {
-        errorDiv.innerText = error.message;
-        errorDiv.classList.remove('hidden');
-    }
-}
-
-// 3. EL REGISTRO
-async function handleRegister() {
-    const email = document.getElementById('mkh-email').value.trim();
-    const pass = document.getElementById('mkh-pass').value;
-    const errorDiv = document.getElementById('auth-error');
-
-    if (pass.length < 6) {
-        errorDiv.innerText = "Mínimo 6 caracteres";
-        errorDiv.classList.remove('hidden');
-        return;
-    }
-
-    try {
-        await auth.createUserWithEmailAndPassword(email, pass);
-        alert("¡Cuenta creada!");
-        navigateTo('inicio');
-    } catch (error) {
-        errorDiv.innerText = error.message;
+        errorDiv.innerText = "Error: " + error.message;
         errorDiv.classList.remove('hidden');
     }
 }
 
 function handleLogout() {
-    auth.signOut().then(() => {
-        navigateTo('inicio');
-    });
+    auth.signOut().then(() => navigateTo('inicio'));
 }
 
 // EL CIERRE FINAL (Asegúrate de que esto sea lo último de tu archivo)
